@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="-随笔," />
+  <meta name="keywords" content="-jvm," />
 
 
 
@@ -87,16 +87,16 @@
 
 
 
-<meta name="description" content="不必太纠结于当下，也不必太忧虑未来，人生没有无用的经历，当你经历过一些事情后，眼前的风景已经和从前不一样了，哪里有人会喜欢孤独，不过是不喜欢失望，谁都有自己的伤心事，成熟不过是善于隐藏，沧桑不过是无泪有伤。">
+<meta name="description" content="1运行时数据区域程序计数器： 线程私有，当前线程所执行的字节码的行号指示器。唯一没有规定outofmemory情况的区域java虚拟机栈： 线程私有，描述的是java方法执行的内存模型：每个方法在执行时都会创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。局部变量表存放编译器可知的基本数据类型（boolean,byte,char,short,int,float,long,doub">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2017折腾起来">
-<meta property="og:url" content="http://yoursite.com/2017/02/24/2017折腾起来/index.html">
+<meta property="og:title" content="java内存区域与内存溢出异常">
+<meta property="og:url" content="http://yoursite.com/2017/03/02/java内存区域与内存溢出异常/index.html">
 <meta property="og:site_name" content="The man like the wind">
-<meta property="og:description" content="不必太纠结于当下，也不必太忧虑未来，人生没有无用的经历，当你经历过一些事情后，眼前的风景已经和从前不一样了，哪里有人会喜欢孤独，不过是不喜欢失望，谁都有自己的伤心事，成熟不过是善于隐藏，沧桑不过是无泪有伤。">
-<meta property="og:updated_time" content="2017-02-24T13:22:54.943Z">
+<meta property="og:description" content="1运行时数据区域程序计数器： 线程私有，当前线程所执行的字节码的行号指示器。唯一没有规定outofmemory情况的区域java虚拟机栈： 线程私有，描述的是java方法执行的内存模型：每个方法在执行时都会创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。局部变量表存放编译器可知的基本数据类型（boolean,byte,char,short,int,float,long,doub">
+<meta property="og:updated_time" content="2017-03-02T08:13:22.816Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2017折腾起来">
-<meta name="twitter:description" content="不必太纠结于当下，也不必太忧虑未来，人生没有无用的经历，当你经历过一些事情后，眼前的风景已经和从前不一样了，哪里有人会喜欢孤独，不过是不喜欢失望，谁都有自己的伤心事，成熟不过是善于隐藏，沧桑不过是无泪有伤。">
+<meta name="twitter:title" content="java内存区域与内存溢出异常">
+<meta name="twitter:description" content="1运行时数据区域程序计数器： 线程私有，当前线程所执行的字节码的行号指示器。唯一没有规定outofmemory情况的区域java虚拟机栈： 线程私有，描述的是java方法执行的内存模型：每个方法在执行时都会创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。局部变量表存放编译器可知的基本数据类型（boolean,byte,char,short,int,float,long,doub">
 
 
 
@@ -124,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/24/2017折腾起来/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/02/java内存区域与内存溢出异常/"/>
 
 
 
 
 
-  <title> 2017折腾起来 | The man like the wind </title>
+  <title> java内存区域与内存溢出异常 | The man like the wind </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -259,7 +259,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/24/2017折腾起来/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/02/java内存区域与内存溢出异常/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="无尴尬不青春">
@@ -283,7 +283,7 @@
             
             
               
-                2017折腾起来
+                java内存区域与内存溢出异常
               
             
           </h1>
@@ -298,8 +298,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-24T14:33:27+08:00">
-                2017-02-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-02T16:12:02+08:00">
+                2017-03-02
               </time>
             
 
@@ -321,8 +321,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/随笔/" itemprop="url" rel="index">
-                    <span itemprop="name">随笔</span>
+                  <a href="/categories/jvm/" itemprop="url" rel="index">
+                    <span itemprop="name">jvm</span>
                   </a>
                 </span>
 
@@ -339,8 +339,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/02/24/2017折腾起来/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/2017折腾起来/" itemprop="commentCount"></span>
+                <a href="/2017/03/02/java内存区域与内存溢出异常/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/02/java内存区域与内存溢出异常/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -366,9 +366,14 @@
       
 
       
-        <blockquote>
-<p>不必太纠结于当下，也不必太忧虑未来，人生没有无用的经历，当你经历过一些事情后，眼前的风景已经和从前不一样了，哪里有人会喜欢孤独，不过是不喜欢失望，谁都有自己的伤心事，成熟不过是善于隐藏，沧桑不过是无泪有伤。<br><a id="more"></a></p>
-</blockquote>
+        <h1 id="1运行时数据区域"><a href="#1运行时数据区域" class="headerlink" title="1运行时数据区域"></a>1运行时数据区域</h1><p><strong>程序计数器：</strong> 线程私有，当前线程所执行的字节码的行号指示器。唯一没有规定outofmemory情况的区域<br><strong>java虚拟机栈：</strong> 线程私有，描述的是java方法执行的内存模型：每个方法在执行时都会创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。局部变量表存放编译器可知的基本数据类型（boolean,byte,char,short,int,float,long,double）和对象引用（指针，句柄）和returnaddress类型（指向一条字节码指令的地址），局部变量表所需内存空间在编译期间完成分配.这个区域有两个异常情况：请求深度大于虚拟机允许深度抛出stackoverflowerror异常，如果允许虚拟机栈动态扩展但是无法申请到足够内存，将会抛出outofmemoryerror异常<br><strong>本地方法栈：</strong>与虚拟机栈作用相似，为虚拟机使用native方法服务。(hotspot虚拟机把本地方法栈和虚拟机栈合二为一)。异常类型stackoverflowerror和outofmemoryerror<br><strong>java堆：</strong> 所有线程共享，虚拟机启动是创建。此内存唯一目的存放对象实例。细分有eden空间、from survivor空间、to survivor空间。存在outofmemory异常<br><strong>方法区：</strong> 线程共享内存区域，用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。习惯称为永久代（仅仅hotspot将GC分代收集扩展至方法区），jdk1.7 hotsot中已经将字符串常量池移除。<br>运行时常量池是方法区一部分，类加载后用于存放class文件的常量池（存放编译期生成的各种字面量和符号引用）。运行时常量池相对class文件常量池具备动态性，运行期间可能将新的常量放入池中（String类的intern（）方法）<br><strong>直接内存：</strong> 不是运行时数据区一部分，但频繁使用，可能导致outofmemoryerror。例如NIO可以使用Native函数库操作直接分配堆外内存，通过java堆中的DirectByteBuffer操作该内存。  </p>
+<h1 id="2HotSpot虚拟机对象探秘"><a href="#2HotSpot虚拟机对象探秘" class="headerlink" title="2HotSpot虚拟机对象探秘"></a>2HotSpot虚拟机对象探秘</h1><h2 id="2-1对象创建"><a href="#2-1对象创建" class="headerlink" title="2.1对象创建"></a>2.1对象创建</h2><p>遇到new指令，虚拟机对象创建步骤  </p>
+<ol>
+<li>首先检查指令的参数是否能在常量池中定位到一个类的符号引用，并检查这个符号引用代表的类是否已被加载、解析和初始化。如果没有先执行相应的类加载<br>2.接下来为新生对象分配内存，兑现所需内存大小在类加载完成后便可确定。分配方式：指针碰撞（内存规整）或空闲列表（内存不规整）。</li>
+<li>将分配到的内存空间初始化为零值（不包括对象值）</li>
+<li>设置对象头</li>
+<li>执行<init>方法<h2 id="2-2对象内存布局"><a href="#2-2对象内存布局" class="headerlink" title="2.2对象内存布局"></a>2.2对象内存布局</h2>HotSpot虚拟机中，对象在内存中存储的布局可以分为3块区域：对象头、实例数据、对齐填充<br><strong>对象头：</strong> 包括两部分信息，第一部分用于存储对象自身的运行时数据，如哈希码、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等。另一部分是类型指针，既对象指向它的类元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的实例。如果对象是数组对象还要有一块用于记录数组长度的数据，因为数组的元数据不包括数组大小。<br><strong>实例数据：</strong> 存储对象真正的有效信息，程序代码中定义的各种类型的字段内容，无论是从父类继承还是子类定义的都要记录。<br><strong>对齐填充：</strong> 对齐填充不是必然的，没有特别含义，仅仅是占位符。HotSpot vm自动内存管理系统要求对象起止地址必须是8字节整数倍，而对象头正好是8字节整数倍，因此对象实例数据没有对其就需要对齐填充。  <h2 id="2-3对象访问定位"><a href="#2-3对象访问定位" class="headerlink" title="2.3对象访问定位"></a>2.3对象访问定位</h2>java程序需要通过栈上的reference数据（局部变量表中）来操作堆上的具体对象。目前主流的访问方式有句柄和直接指针。<br><strong>句柄访问：</strong> java堆划分一块内存来作为句柄池，reference中存储对象句柄地址，句柄中包含对象实例数据与类型数据的指针<br><strong>直接指针：</strong> reference存储对象地址，java堆对象存放类型数据指针  <h2 id="2-4OutofMemoryError异常相关参数配置"><a href="#2-4OutofMemoryError异常相关参数配置" class="headerlink" title="2.4OutofMemoryError异常相关参数配置"></a>2.4OutofMemoryError异常相关参数配置</h2><strong>java堆溢出：</strong><br>-Xms20m  堆最小值20MB<br>-Xmx20m  堆最大值20MB<br>-XX:+HeapDumpOnOutOfMemoryError 可让虚拟机出现内存溢出是dump出当前内存堆转储快照<br><strong>虚拟机栈和本地方法栈溢出：</strong><br>-Xss128k 设置栈容量<br>-Xoss128k 设置本地方法栈大小（HotSpot中不区分虚拟机栈和本地方法栈，无效）<br><strong>方法区和运行时常量池溢出：</strong><br>-XX:PermSize=10M 方法区大小<br>-XX:MaxpermSize=10M<br><strong>本机直接内存溢出：</strong><br>-XX:MaxDirectMemorySize=10M 指定DirectMemory容量</init></li>
+</ol>
 
       
     </div>
@@ -413,7 +418,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/随笔/" rel="tag"># -随笔</a>
+            <a href="/tags/jvm/" rel="tag"># -jvm</a>
           
         </div>
       
@@ -426,15 +431,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/02/24/2017折腾起来/" rel="next" title="2017折腾起来">
+                <i class="fa fa-chevron-left"></i> 2017折腾起来
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/02/java内存区域与内存溢出异常/" rel="prev" title="java内存区域与内存溢出异常">
-                java内存区域与内存溢出异常 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -449,10 +454,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/02/24/2017折腾起来/"
-     data-title="2017折腾起来"
+        <div class="ds-share flat" data-thread-key="2017/03/02/java内存区域与内存溢出异常/"
+     data-title="java内存区域与内存溢出异常"
      data-content=""
-     data-url="http://yoursite.com/2017/02/24/2017折腾起来/">
+     data-url="http://yoursite.com/2017/03/02/java内存区域与内存溢出异常/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -479,8 +484,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/24/2017折腾起来/"
-           data-title="2017折腾起来" data-url="http://yoursite.com/2017/02/24/2017折腾起来/">
+      <div class="ds-thread" data-thread-key="2017/03/02/java内存区域与内存溢出异常/"
+           data-title="java内存区域与内存溢出异常" data-url="http://yoursite.com/2017/03/02/java内存区域与内存溢出异常/">
       </div>
     
   </div>
@@ -504,8 +509,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/11.png"
@@ -597,6 +611,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1运行时数据区域"><span class="nav-number">1.</span> <span class="nav-text">1运行时数据区域</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2HotSpot虚拟机对象探秘"><span class="nav-number">2.</span> <span class="nav-text">2HotSpot虚拟机对象探秘</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1对象创建"><span class="nav-number">2.1.</span> <span class="nav-text">2.1对象创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2对象内存布局"><span class="nav-number">2.2.</span> <span class="nav-text">2.2对象内存布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3对象访问定位"><span class="nav-number">2.3.</span> <span class="nav-text">2.3对象访问定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4OutofMemoryError异常相关参数配置"><span class="nav-number">2.4.</span> <span class="nav-text">2.4OutofMemoryError异常相关参数配置</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
