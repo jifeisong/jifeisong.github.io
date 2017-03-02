@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="-jvm," />
+  <meta name="keywords" content="-"jvm"," />
 
 
 
@@ -89,13 +89,13 @@
 
 <meta name="description" content="1运行时数据区域程序计数器： 线程私有，当前线程所执行的字节码的行号指示器。唯一没有规定outofmemory情况的区域java虚拟机栈： 线程私有，描述的是java方法执行的内存模型：每个方法在执行时都会创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。局部变量表存放编译器可知的基本数据类型（boolean,byte,char,short,int,float,long,doub">
 <meta property="og:type" content="article">
-<meta property="og:title" content="java内存区域与内存溢出异常">
+<meta property="og:title" content="深入理解java虚拟机-java内存区域与内存溢出异常">
 <meta property="og:url" content="http://yoursite.com/2017/03/02/java内存区域与内存溢出异常/index.html">
 <meta property="og:site_name" content="The man like the wind">
 <meta property="og:description" content="1运行时数据区域程序计数器： 线程私有，当前线程所执行的字节码的行号指示器。唯一没有规定outofmemory情况的区域java虚拟机栈： 线程私有，描述的是java方法执行的内存模型：每个方法在执行时都会创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。局部变量表存放编译器可知的基本数据类型（boolean,byte,char,short,int,float,long,doub">
-<meta property="og:updated_time" content="2017-03-02T08:13:22.816Z">
+<meta property="og:updated_time" content="2017-03-02T08:23:08.897Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="java内存区域与内存溢出异常">
+<meta name="twitter:title" content="深入理解java虚拟机-java内存区域与内存溢出异常">
 <meta name="twitter:description" content="1运行时数据区域程序计数器： 线程私有，当前线程所执行的字节码的行号指示器。唯一没有规定outofmemory情况的区域java虚拟机栈： 线程私有，描述的是java方法执行的内存模型：每个方法在执行时都会创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。局部变量表存放编译器可知的基本数据类型（boolean,byte,char,short,int,float,long,doub">
 
 
@@ -130,7 +130,7 @@
 
 
 
-  <title> java内存区域与内存溢出异常 | The man like the wind </title>
+  <title> 深入理解java虚拟机-java内存区域与内存溢出异常 | The man like the wind </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -283,7 +283,7 @@
             
             
               
-                java内存区域与内存溢出异常
+                深入理解java虚拟机-java内存区域与内存溢出异常
               
             
           </h1>
@@ -366,7 +366,7 @@
       
 
       
-        <h1 id="1运行时数据区域"><a href="#1运行时数据区域" class="headerlink" title="1运行时数据区域"></a>1运行时数据区域</h1><p><strong>程序计数器：</strong> 线程私有，当前线程所执行的字节码的行号指示器。唯一没有规定outofmemory情况的区域<br><strong>java虚拟机栈：</strong> 线程私有，描述的是java方法执行的内存模型：每个方法在执行时都会创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。局部变量表存放编译器可知的基本数据类型（boolean,byte,char,short,int,float,long,double）和对象引用（指针，句柄）和returnaddress类型（指向一条字节码指令的地址），局部变量表所需内存空间在编译期间完成分配.这个区域有两个异常情况：请求深度大于虚拟机允许深度抛出stackoverflowerror异常，如果允许虚拟机栈动态扩展但是无法申请到足够内存，将会抛出outofmemoryerror异常<br><strong>本地方法栈：</strong>与虚拟机栈作用相似，为虚拟机使用native方法服务。(hotspot虚拟机把本地方法栈和虚拟机栈合二为一)。异常类型stackoverflowerror和outofmemoryerror<br><strong>java堆：</strong> 所有线程共享，虚拟机启动是创建。此内存唯一目的存放对象实例。细分有eden空间、from survivor空间、to survivor空间。存在outofmemory异常<br><strong>方法区：</strong> 线程共享内存区域，用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。习惯称为永久代（仅仅hotspot将GC分代收集扩展至方法区），jdk1.7 hotsot中已经将字符串常量池移除。<br>运行时常量池是方法区一部分，类加载后用于存放class文件的常量池（存放编译期生成的各种字面量和符号引用）。运行时常量池相对class文件常量池具备动态性，运行期间可能将新的常量放入池中（String类的intern（）方法）<br><strong>直接内存：</strong> 不是运行时数据区一部分，但频繁使用，可能导致outofmemoryerror。例如NIO可以使用Native函数库操作直接分配堆外内存，通过java堆中的DirectByteBuffer操作该内存。  </p>
+        <h1 id="1运行时数据区域"><a href="#1运行时数据区域" class="headerlink" title="1运行时数据区域"></a>1运行时数据区域</h1><p><strong>程序计数器：</strong> 线程私有，当前线程所执行的字节码的行号指示器。唯一没有规定outofmemory情况的区域<br><strong>java虚拟机栈：</strong> 线程私有，描述的是java方法执行的内存模型：每个方法在执行时都会创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。局部变量表存放编译器可知的基本数据类型（boolean,byte,char,short,int,float,long,double）和对象引用（指针，句柄）和returnaddress类型（指向一条字节码指令的地址），局部变量表所需内存空间在编译期间完成分配.这个区域有两个异常情况：请求深度大于虚拟机允许深度抛出stackoverflowerror异常，如果允许虚拟机栈动态扩展但是无法申请到足够内存，将会抛出outofmemoryerror异常<br><strong>本地方法栈：</strong>与虚拟机栈作用相似，为虚拟机使用native方法服务。(hotspot虚拟机把本地方法栈和虚拟机栈合二为一)。异常类型stackoverflowerror和outofmemoryerror<br><strong>java堆：</strong> 所有线程共享，虚拟机启动是创建。此内存唯一目的存放对象实例。细分有eden空间、from survivor空间、to survivor空间。存在outofmemory异常<br><a id="more"></a><br><strong>方法区：</strong> 线程共享内存区域，用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。习惯称为永久代（仅仅hotspot将GC分代收集扩展至方法区），jdk1.7 hotsot中已经将字符串常量池移除。<br>运行时常量池是方法区一部分，类加载后用于存放class文件的常量池（存放编译期生成的各种字面量和符号引用）。运行时常量池相对class文件常量池具备动态性，运行期间可能将新的常量放入池中（String类的intern（）方法）<br><strong>直接内存：</strong> 不是运行时数据区一部分，但频繁使用，可能导致outofmemoryerror。例如NIO可以使用Native函数库操作直接分配堆外内存，通过java堆中的DirectByteBuffer操作该内存。  </p>
 <h1 id="2HotSpot虚拟机对象探秘"><a href="#2HotSpot虚拟机对象探秘" class="headerlink" title="2HotSpot虚拟机对象探秘"></a>2HotSpot虚拟机对象探秘</h1><h2 id="2-1对象创建"><a href="#2-1对象创建" class="headerlink" title="2.1对象创建"></a>2.1对象创建</h2><p>遇到new指令，虚拟机对象创建步骤  </p>
 <ol>
 <li>首先检查指令的参数是否能在常量池中定位到一个类的符号引用，并检查这个符号引用代表的类是否已被加载、解析和初始化。如果没有先执行相应的类加载<br>2.接下来为新生对象分配内存，兑现所需内存大小在类加载完成后便可确定。分配方式：指针碰撞（内存规整）或空闲列表（内存不规整）。</li>
@@ -418,7 +418,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/jvm/" rel="tag"># -jvm</a>
+            <a href="/tags/jvm/" rel="tag"># -"jvm"</a>
           
         </div>
       
@@ -455,7 +455,7 @@
     <div class="post-spread">
       
         <div class="ds-share flat" data-thread-key="2017/03/02/java内存区域与内存溢出异常/"
-     data-title="java内存区域与内存溢出异常"
+     data-title="深入理解java虚拟机-java内存区域与内存溢出异常"
      data-content=""
      data-url="http://yoursite.com/2017/03/02/java内存区域与内存溢出异常/">
   <div class="ds-share-inline">
@@ -485,7 +485,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2017/03/02/java内存区域与内存溢出异常/"
-           data-title="java内存区域与内存溢出异常" data-url="http://yoursite.com/2017/03/02/java内存区域与内存溢出异常/">
+           data-title="深入理解java虚拟机-java内存区域与内存溢出异常" data-url="http://yoursite.com/2017/03/02/java内存区域与内存溢出异常/">
       </div>
     
   </div>
