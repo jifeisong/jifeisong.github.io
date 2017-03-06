@@ -93,7 +93,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机类加载机制/index.html">
 <meta property="og:site_name" content="The man like the wind">
 <meta property="og:description" content="1类加载时机加载（loading）-&amp;gt;【验证（verification）-&amp;gt;准备（preparation）-&amp;gt;解析（resolution）】(连接)-&amp;gt;初始化 （initialization）-&amp;gt;使用（using）-&amp;gt;卸载（unloading）">
-<meta property="og:updated_time" content="2017-03-06T05:57:12.916Z">
+<meta property="og:updated_time" content="2017-03-06T06:01:08.592Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解java虚拟机-虚拟机类加载机制">
 <meta name="twitter:description" content="1类加载时机加载（loading）-&amp;gt;【验证（verification）-&amp;gt;准备（preparation）-&amp;gt;解析（resolution）】(连接)-&amp;gt;初始化 （initialization）-&amp;gt;使用（using）-&amp;gt;卸载（unloading）">
@@ -378,7 +378,9 @@
 <ol>
 <li>通过子类引用父类的静态字段，不会导致子类初始化</li>
 <li>通过数组定义来引用类，不会触发此类的初始化</li>
-<li>引用类的常量（常量在编译阶段会存入调用类的常量池，本质上并没有直接引用到定义常量的类）<h1 id="2类加载的过程"><a href="#2类加载的过程" class="headerlink" title="2类加载的过程"></a>2类加载的过程</h1><h2 id="2-1加载"><a href="#2-1加载" class="headerlink" title="2.1加载"></a>2.1加载</h2></li>
+<li>引用类的常量（常量在编译阶段会存入调用类的常量池，本质上并没有直接引用到定义常量的类）  </li>
+</ol>
+<h1 id="2类加载的过程"><a href="#2类加载的过程" class="headerlink" title="2类加载的过程"></a>2类加载的过程</h1><h2 id="2-1加载"><a href="#2-1加载" class="headerlink" title="2.1加载"></a>2.1加载</h2><ol>
 <li>通过类的全额限定名获取类的二进制字节流（非数组类需要引导类加载器或自定义类加载器，数组类有虚拟机直接创建）</li>
 <li>将字节流的静态存储结构转化为方法区的运行时数据结构</li>
 <li>内存中实例化一个java.lang.Class对象，作为方法区这个类的各种数据访问入口</li>
@@ -392,14 +394,14 @@
 </ol>
 <h2 id="2-3准备"><a href="#2-3准备" class="headerlink" title="2.3准备"></a>2.3准备</h2><p>为类变量分配内存并设置系统要求的初始值（0值）的阶段，这些变量使用的内存放在方法区中进行分配。注意：内存分配仅包括类变量（被static修饰的变量），不包括实例变量（实例变量会在对象实例化时随对象一起分配在java堆中）。初始值指定是0值，赋值动作在初始化阶段进行（fanal类型的会在准备阶段初始化赋值）。</p>
 <h2 id="2-4解析"><a href="#2-4解析" class="headerlink" title="2.4解析"></a>2.4解析</h2><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程。<br>解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄、调用点限定符其中符号引用</p>
-<h2 id="2-5初始化"><a href="#2-5初始化" class="headerlink" title="2.5初始化"></a>2.5初始化</h2><p>根据程序员通过程序指定主观计划初始化类变量和其他资源。初始化阶段是执行类构造器<clinit>()方法的过程。  </clinit></p>
+<h2 id="2-5初始化"><a href="#2-5初始化" class="headerlink" title="2.5初始化"></a>2.5初始化</h2><p>根据程序员通过程序指定主观计划初始化类变量和其他资源。初始化阶段是执行类构造器clinit()方法的过程。  </p>
 <ol>
-<li><clinit>()方法是类中所有类变量的赋值动作和静态语句块中的语句合并产生。</clinit></li>
-<li><clinit>()方法与类构造函数不同，不需要显示调用父类构造器，虚拟机会保证父类<clinit>()方法在子类之前执行</clinit></clinit></li>
+<li>clinit()方法是类中所有类变量的赋值动作和静态语句块中的语句合并产生。</li>
+<li>clinit()方法与类构造函数不同，不需要显示调用父类构造器，虚拟机会保证父类clinit()方法在子类之前执行</li>
 <li>父类静态语句块先于子类执行</li>
-<li><clinit>()方法对于类和接口非必须（没有静态语句块和变量赋值）</clinit></li>
-<li>执行接口的<clinit>()方法不需要先执行父接口的<clinit>()方法，只有当父接口中定义的变量使用时，父接口才会初始化。接口的实现类在初始化时也一样不会执行接口的<clinit>()方法</clinit></clinit></clinit></li>
-<li>虚拟机保证类的<clinit>()方法在多线程下加锁同步。</clinit></li>
+<li>clinit()方法对于类和接口非必须（没有静态语句块和变量赋值）</li>
+<li>执行接口的clinit()方法不需要先执行父接口的clinit()方法，只有当父接口中定义的变量使用时，父接口才会初始化。接口的实现类在初始化时也一样不会执行接口的clinit()方法</li>
+<li>虚拟机保证类的clinit()方法在多线程下加锁同步。</li>
 </ol>
 <h2 id="2-6类加载器"><a href="#2-6类加载器" class="headerlink" title="2.6类加载器"></a>2.6类加载器</h2><p>类加载器和类本身一同确立其在java虚拟机中的唯一性<br>比较两个类是否相等只有在这这两个类是由同一个类加载器加载的前提下才有意义<br><strong>双亲委派模型：</strong><br>一个类加载器收到类加载的请求，首先不会自己加载，而是将请求委派给父类加载器去完成，只有当父类加载器无法完成时子类加载器才会尝试自己加载。保证一个类在加载时使用同一个类加载器。</p>
 <ol>
