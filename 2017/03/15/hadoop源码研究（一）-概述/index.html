@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="jvm," />
+  <meta name="keywords" content="hadoop," />
 
 
 
@@ -87,16 +87,16 @@
 
 
 
-<meta name="description" content="1判断对象存活死亡的算法1.1引用计数算法给对象添加一个引用计数器，每当引用计数器值加1，引用失效计数器值减1，任何时刻计数器值为0的对象就是不可能在被使用的。 主流java虚拟机没有选用引用计数算法管理内存。优点：实现简单，判定效率高缺点：很难解决对象之间的互相循环引用的问题">
+<meta name="description" content="&amp;emsp;&amp;emsp;从今天开始将会对hadoop做进一步深入研究。一方面之前开发也只是简单对api的调用，而且只是使用常用api，对类之间的调用继承没有一个全面的了解，另一方面是通过阅读源码对自己的编码规范和技能都能有一个提升。hadoop有众多的开源子项目，包括HDFS，Hbase，Hive，pig等等。凭借自己一个人的能力是不可能完成的，所以选取和开发相关的部分来研究，也就是mapredu">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解java虚拟机-垃圾收集器与内存分配策略">
-<meta property="og:url" content="http://yoursite.com/2017/03/03/深入理解java虚拟机-垃圾收集器与内存分配策略/index.html">
+<meta property="og:title" content="hadoop源码研究（一）-概述">
+<meta property="og:url" content="http://yoursite.com/2017/03/15/hadoop源码研究（一）-概述/index.html">
 <meta property="og:site_name" content="The man like the wind">
-<meta property="og:description" content="1判断对象存活死亡的算法1.1引用计数算法给对象添加一个引用计数器，每当引用计数器值加1，引用失效计数器值减1，任何时刻计数器值为0的对象就是不可能在被使用的。 主流java虚拟机没有选用引用计数算法管理内存。优点：实现简单，判定效率高缺点：很难解决对象之间的互相循环引用的问题">
-<meta property="og:updated_time" content="2017-03-06T05:57:48.332Z">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;从今天开始将会对hadoop做进一步深入研究。一方面之前开发也只是简单对api的调用，而且只是使用常用api，对类之间的调用继承没有一个全面的了解，另一方面是通过阅读源码对自己的编码规范和技能都能有一个提升。hadoop有众多的开源子项目，包括HDFS，Hbase，Hive，pig等等。凭借自己一个人的能力是不可能完成的，所以选取和开发相关的部分来研究，也就是mapredu">
+<meta property="og:updated_time" content="2017-03-15T03:18:24.976Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解java虚拟机-垃圾收集器与内存分配策略">
-<meta name="twitter:description" content="1判断对象存活死亡的算法1.1引用计数算法给对象添加一个引用计数器，每当引用计数器值加1，引用失效计数器值减1，任何时刻计数器值为0的对象就是不可能在被使用的。 主流java虚拟机没有选用引用计数算法管理内存。优点：实现简单，判定效率高缺点：很难解决对象之间的互相循环引用的问题">
+<meta name="twitter:title" content="hadoop源码研究（一）-概述">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;从今天开始将会对hadoop做进一步深入研究。一方面之前开发也只是简单对api的调用，而且只是使用常用api，对类之间的调用继承没有一个全面的了解，另一方面是通过阅读源码对自己的编码规范和技能都能有一个提升。hadoop有众多的开源子项目，包括HDFS，Hbase，Hive，pig等等。凭借自己一个人的能力是不可能完成的，所以选取和开发相关的部分来研究，也就是mapredu">
 
 
 
@@ -124,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/03/深入理解java虚拟机-垃圾收集器与内存分配策略/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/15/hadoop源码研究（一）-概述/"/>
 
 
 
 
 
-  <title> 深入理解java虚拟机-垃圾收集器与内存分配策略 | The man like the wind </title>
+  <title> hadoop源码研究（一）-概述 | The man like the wind </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -259,7 +259,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/03/深入理解java虚拟机-垃圾收集器与内存分配策略/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/15/hadoop源码研究（一）-概述/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="无尴尬不青春">
@@ -283,7 +283,7 @@
             
             
               
-                深入理解java虚拟机-垃圾收集器与内存分配策略
+                hadoop源码研究（一）-概述
               
             
           </h1>
@@ -298,8 +298,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-03T15:58:35+08:00">
-                2017-03-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-15T11:16:40+08:00">
+                2017-03-15
               </time>
             
 
@@ -321,8 +321,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jvm/" itemprop="url" rel="index">
-                    <span itemprop="name">jvm</span>
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
                   </a>
                 </span>
 
@@ -339,8 +339,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/03/03/深入理解java虚拟机-垃圾收集器与内存分配策略/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/03/深入理解java虚拟机-垃圾收集器与内存分配策略/" itemprop="commentCount"></span>
+                <a href="/2017/03/15/hadoop源码研究（一）-概述/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/15/hadoop源码研究（一）-概述/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -366,31 +366,14 @@
       
 
       
-        <h1 id="1判断对象存活死亡的算法"><a href="#1判断对象存活死亡的算法" class="headerlink" title="1判断对象存活死亡的算法"></a>1判断对象存活死亡的算法</h1><h2 id="1-1引用计数算法"><a href="#1-1引用计数算法" class="headerlink" title="1.1引用计数算法"></a>1.1引用计数算法</h2><p>给对象添加一个引用计数器，每当引用计数器值加1，引用失效计数器值减1，任何时刻计数器值为0的对象就是不可能在被使用的。 主流java虚拟机没有选用引用计数算法管理内存。<br>优点：实现简单，判定效率高<br>缺点：很难解决对象之间的互相循环引用的问题<br><a id="more"></a></p>
-<h2 id="1-2可达性分析算法"><a href="#1-2可达性分析算法" class="headerlink" title="1.2可达性分析算法"></a>1.2可达性分析算法</h2><p>通过一系列的称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索走过的路径称为引用链，当一个对象到GC Roots没有任何引用链相连，则证明此对象不可用。<br><strong>java中可作为GC Roots的对象：</strong>  </p>
-<ul>
-<li>虚拟机栈（栈帧中的本地变量表）中引用的对象  </li>
-<li>方法区中的类静态属性引用对象  </li>
-<li>方法区中常量引用的对象  </li>
-<li>本地方法栈中JNI（即Native方法）引用对象  </li>
-</ul>
-<h2 id="1-3再谈引用"><a href="#1-3再谈引用" class="headerlink" title="1.3再谈引用"></a>1.3再谈引用</h2><p><strong>强引用：</strong> 强引用存在，垃圾收集器永远不会收掉被引用对象<br><strong>软引用：</strong> 软引用关联的对象，在系统发生内存溢出之前会被列进回收范围进行二次回收。如果回收后还没有足够的内存，会发生内存溢出。<br><strong>弱引用：</strong>  弱引用关联的对象只能生存到下一次<br><strong>虚引用：</strong> 虚引用不影响生存时间，无法通过虚引用获得对象实例，唯一目的是在对象被回收时收到一个系统通知  </p>
-<h2 id="1-4死亡逃逸"><a href="#1-4死亡逃逸" class="headerlink" title="1.4死亡逃逸"></a>1.4死亡逃逸</h2><p>可达性分析不可达的对象，不一定非死不可。finalize（）是对象逃脱死亡的最后一次机会，该方法只会被系统自动调用一次。对象死亡经历两次标记过程：  </p>
+        <p>&emsp;&emsp;从今天开始将会对hadoop做进一步深入研究。一方面之前开发也只是简单对api的调用，而且只是使用常用api，对类之间的调用继承没有一个全面的了解，另一方面是通过阅读源码对自己的编码规范和技能都能有一个提升。hadoop有众多的开源子项目，包括HDFS，Hbase，Hive，pig等等。凭借自己一个人的能力是不可能完成的，所以选取和开发相关的部分来研究，也就是mapreduce。<br>&emsp;&emsp;在MapReduce的过程一般分为5个过程，这个稍稍了解Hadoop的人应该都知道:<br>InputFormat——&gt;Mapper——-&gt;Partitioner——&gt;Reducer———&gt;OutputFormat一个线性的执行流程。在Hadoop中，已经默认提供了InputFormat，Partitioner，OutputFormat的步骤，所以一般我们只需要重写自己的Map映射方法和Reduce处理函数就可以了。Map Task 可以分解为Read，Map，Collect，Spill，Combine,后三步是重点，而Reduce Task 可分解为Shuffle，Merge，Sort，Reduce,Write,其中前三步为重点。<br><a id="more"></a><br>&emsp;&emsp;接下来就按照mapreduce的过程来研究相关源码，包括inputFormat，Mapper，Partitionner，Reducer，OutputFormat等等一些相关类的继承关系，方法实现，以及自定义重写进行研究。<br>&emsp;&emsp;下面介绍一下eclipse查看源码的方法：</p>
 <ol>
-<li>如果对象与GC Roots没有相连的引用链，进行第一次标记并进行一次筛选（筛选是否有必要执行finalize（），如果没有覆盖该方法或者已经执行过则没必要执行）  </li>
-<li>对象放入F-Queue队列等待执行finalize（），稍后GC对F-Quque中对象进行二次标记。如果在finalize（）被拯救则移除即将收回的集合。  </li>
+<li>Open Call Hierarchy：<br>用Open Call Hierarchy可以查看方法的调用层次。如果想知道一个方法在别的什么地方被调用了，这个功能就很好用了，实际中也很常用，比如要重构一个方法时，想 知道他对其它什么地方可能有影响，就可以用这个功能。在方法名上点击右键，选择Open Type Hierarchy即可，快捷键是Ctrl+Alt+H。可以在Call Hierarchy窗口看到方法的调用层次的导航。</li>
+<li>Open Type Hierarchy：<br>用Open Type Hierarchy可以查看类的继承关系，可以在Hierarchy窗口看到继承层次的导航。在方法或类名上点击右键，选择Open Type Hierarchy即可，快捷键是F4。</li>
+<li>用Open Declaration可以查看类、方法和变量的声明。这是最常用的一个功能了，如果在要追踪的对象上点右键，选择Open Declaration，可以跳转到其声明的地方。这个功能有个快捷键是F3，当然你也可以按住Ctrl键，鼠标移过去会变成一个小手，单击就可以了。</li>
+<li>用Open Super Implemention可以查看当前方法在父类中的实现或接口中的声明(前提是该方法是对父类或接口中相应方法的重写)，在方法名上ctr+左键，选择Open Super Implemention即可。</li>
+<li>最后介绍一个超级好用的功能，叫Open Implemention，就是可以跳转到某个调用的方法的具体实现的地方去。为什么说这个是超级好用呢？用过Spring的人都知道，现在都提倡面向接 口编程，所以，如果使用Open Declaration来追踪一个方法的调用的话，只会看到该方法在接口中的声明，而看不该方法在具体类中的实现，当然，可以使用Call Hierarchy先得到该方法的整个的调用层次，然后再导航到具体的实现处，但操作有些麻烦了。有了Open Implemention，就可以直接看到实现的代码了，在方法名上ctr+鼠标左键</li>
 </ol>
-<h2 id="1-5回收方法区"><a href="#1-5回收方法区" class="headerlink" title="1.5回收方法区"></a>1.5回收方法区</h2><p>方法区的垃圾回收主要有两部分：废弃常量和无用类。<br>回收废弃常量池与回收堆中对象类似，判断条件为该常量是否被引用<br>无用类条件：该类所有实例都被回收，加载该类的ClassLoader被回收，该类对应的java.lang.Class对象没有任何被引用，无法通过反射访问该类。满足这三个条件不一定能被回收还有一些参数控制。  </p>
-<h1 id="2垃圾收集算法"><a href="#2垃圾收集算法" class="headerlink" title="2垃圾收集算法"></a>2垃圾收集算法</h1><ol>
-<li>标记-清除算法<br>缺点：效率不高，产生空间碎片  </li>
-<li>复制算法 （新生代常用）<br>优点：实现简单，效率高<br>缺点：可用内存缩小 ，对象存活率高时复制操作多，效率变低</li>
-<li>标记-整理算法 （老年代常用）  </li>
-<li>分代收集算法<br>新生代采用复制算法，老年代采用标记清理或者标记整理算法  </li>
-</ol>
-<h1 id="3垃圾收集器"><a href="#3垃圾收集器" class="headerlink" title="3垃圾收集器"></a>3垃圾收集器</h1><ol>
-<li>垃圾收集器<br><strong>serial收集器：</strong><br>新生代收集器<br>单线程<br>进行垃圾回收必须暂停其他线程<br>简单，高效，没有线程交互开销<br>client模式下的虚拟机很好的选择，也是该模式下默认收集器<br><strong>parnew收集器：</strong><br>新生代收集器<br>serial收集器的多线程版本<br>server模式下的新生代默认收集器<br>除了serial只有他能和cms收集器配合使用<br><strong>parallelscavenge收集器：</strong><br>新生代收集器<br>使用复制算法<br>多线程收集器<br>吞吐量优先，尽可能缩短垃圾回收时用户线程的停顿时间，目标是达到一个可控制的吞吐量<br>还有个参数-XX：+UseAdaptiveSizePolicy，用来自动调节新生代的大小。自适应调节策略也是该收集器和parnew的一个重要区别<br><strong>serial old收集器：</strong><br>serial的老年代版本<br>采用标记整理算法<br>使用最多的场景是client端<br>另外还有两个用途：jdk1.5之前和parallel scavenge配合使用，做为cms收集器的备选方案，发生concurrent mode failure时使用<br><strong>parallel old收集器:</strong><br>parallel scavenge收集器的老年代版本<br>标记整理算法<br>使用多线程<br>该收集器是为了和parallel scavenge配合使用。jdk1.6以前如果新生代使用parallel scavenge收集器，只能搭配老年代的serial old收集器，这样只是保证新生代的吞吐量优先，无法保证整体的吞吐量。而parallel old收集器正是为了在老年代提供吞吐量优先的收集器，如果系统对吞吐量要求比较高，可以优先考虑新生代parallel scavenge和老年代parallel old收集器的搭配策略<br><strong>cms收集器：</strong><br>标记清除算法<br>以获取最短回收停顿时间为目标的收集器。<br>优点：并发收集。低停顿。<br>缺点：cpu敏感，无法处理浮动垃圾，cms基于标记清除算法，会产生大量碎片<br>该收集器非常适用于互联网领域或者B/S系统的服务端。<br><strong>G1收集器：</strong><br>并行与并发<br>分代收集<br>空间整合不产生碎片<br>可预测停顿<br>收集步骤：初始标记（停顿），并发标记（不停顿），最终标记（停顿），筛选标记（停顿）<br>可以精确控制停顿，让垃圾回收不超过N毫秒，在不牺牲吞吐量的情况下完成低停顿的垃圾回收，这是因为他会避免在全区域进行垃圾回收，G1会将整个堆内存划分为多个大小固定的独立区域，并根据这些垃圾的堆积程度，在后台维护一个垃圾优先列表，优先回收垃圾最多的区域。</li>
-</ol>
-<h1 id="4内存分配与回收策略"><a href="#4内存分配与回收策略" class="headerlink" title="4内存分配与回收策略"></a>4内存分配与回收策略</h1><p>对象优先分配在Eden区，Eden区没有足够空间时进行一次Minor（较小的） GC。<br>大对象直接进入老年代<br>长期存活对象进入老年代<br>survivor没有足够空间存放上一次新生代收集下来的存活对象（Eden和另一个survivor），这些对象通过分配担保进入老年代</p>
 
       
     </div>
@@ -435,7 +418,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/jvm/" rel="tag"># jvm</a>
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
           
         </div>
       
@@ -448,8 +431,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/02/java内存区域与内存溢出异常/" rel="next" title="深入理解java虚拟机-java内存区域与内存溢出异常">
-                <i class="fa fa-chevron-left"></i> 深入理解java虚拟机-java内存区域与内存溢出异常
+              <a href="/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/" rel="next" title="深入理解java虚拟机-虚拟机字节码执行引擎">
+                <i class="fa fa-chevron-left"></i> 深入理解java虚拟机-虚拟机字节码执行引擎
               </a>
             
           </div>
@@ -457,10 +440,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/06/深入理解java虚拟机-虚拟机类加载机制/" rel="prev" title="深入理解java虚拟机-虚拟机类加载机制">
-                深入理解java虚拟机-虚拟机类加载机制 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -475,10 +454,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/03/03/深入理解java虚拟机-垃圾收集器与内存分配策略/"
-     data-title="深入理解java虚拟机-垃圾收集器与内存分配策略"
+        <div class="ds-share flat" data-thread-key="2017/03/15/hadoop源码研究（一）-概述/"
+     data-title="hadoop源码研究（一）-概述"
      data-content=""
-     data-url="http://yoursite.com/2017/03/03/深入理解java虚拟机-垃圾收集器与内存分配策略/">
+     data-url="http://yoursite.com/2017/03/15/hadoop源码研究（一）-概述/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -505,8 +484,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/03/03/深入理解java虚拟机-垃圾收集器与内存分配策略/"
-           data-title="深入理解java虚拟机-垃圾收集器与内存分配策略" data-url="http://yoursite.com/2017/03/03/深入理解java虚拟机-垃圾收集器与内存分配策略/">
+      <div class="ds-thread" data-thread-key="2017/03/15/hadoop源码研究（一）-概述/"
+           data-title="hadoop源码研究（一）-概述" data-url="http://yoursite.com/2017/03/15/hadoop源码研究（一）-概述/">
       </div>
     
   </div>
@@ -530,17 +509,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/11.png"
@@ -636,22 +606,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1判断对象存活死亡的算法"><span class="nav-number">1.</span> <span class="nav-text">1判断对象存活死亡的算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1引用计数算法"><span class="nav-number">1.1.</span> <span class="nav-text">1.1引用计数算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2可达性分析算法"><span class="nav-number">1.2.</span> <span class="nav-text">1.2可达性分析算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3再谈引用"><span class="nav-number">1.3.</span> <span class="nav-text">1.3再谈引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4死亡逃逸"><span class="nav-number">1.4.</span> <span class="nav-text">1.4死亡逃逸</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5回收方法区"><span class="nav-number">1.5.</span> <span class="nav-text">1.5回收方法区</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2垃圾收集算法"><span class="nav-number">2.</span> <span class="nav-text">2垃圾收集算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3垃圾收集器"><span class="nav-number">3.</span> <span class="nav-text">3垃圾收集器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4内存分配与回收策略"><span class="nav-number">4.</span> <span class="nav-text">4内存分配与回收策略</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
