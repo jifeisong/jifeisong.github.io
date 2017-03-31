@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hadoop," />
+  <meta name="keywords" content="java," />
 
 
 
@@ -87,16 +87,16 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;经过一周时间的学习对mapreduce开发最相关的几个流程的源码进行了分析。主要是通过大神的博客的指导来学习，但这期间还是有些吃力。hadoop这样一个庞大的工程，要是没有博客指导，都不知道从何下手。参考的博客主要是对旧版本mapreduce进行分析，我同时对新版本的源码也相应的进行了学习，新旧版本改动差距还是很大，项目结构和源码都有不小的改变。不管怎样收获还是很大，不仅对">
+<meta name="description" content="最近看《java多线程核心编程技术》的单例模式与多线程章节提到单例模式序列化与反序列化存在的问题：静态内置类可以达到线程安全问题，但如果遇到序列化对象时，使用默认的方式运行得到的结果还是多例的。解决办法是通过readResolve()方法。对此方法的原理并不清楚书中也未提及，因此学习了一下其实现原理，再此记录。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hadoop源码研究（二）-mapreduce相关源码">
-<meta property="og:url" content="http://yoursite.com/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/index.html">
+<meta property="og:title" content="java单例模式的可序列化和readResolve()">
+<meta property="og:url" content="http://yoursite.com/2017/03/31/java单例模式的可序列化和readResolve/index.html">
 <meta property="og:site_name" content="The man like the wind">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;经过一周时间的学习对mapreduce开发最相关的几个流程的源码进行了分析。主要是通过大神的博客的指导来学习，但这期间还是有些吃力。hadoop这样一个庞大的工程，要是没有博客指导，都不知道从何下手。参考的博客主要是对旧版本mapreduce进行分析，我同时对新版本的源码也相应的进行了学习，新旧版本改动差距还是很大，项目结构和源码都有不小的改变。不管怎样收获还是很大，不仅对">
-<meta property="og:updated_time" content="2017-03-21T02:45:05.779Z">
+<meta property="og:description" content="最近看《java多线程核心编程技术》的单例模式与多线程章节提到单例模式序列化与反序列化存在的问题：静态内置类可以达到线程安全问题，但如果遇到序列化对象时，使用默认的方式运行得到的结果还是多例的。解决办法是通过readResolve()方法。对此方法的原理并不清楚书中也未提及，因此学习了一下其实现原理，再此记录。">
+<meta property="og:updated_time" content="2017-03-31T06:08:28.558Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hadoop源码研究（二）-mapreduce相关源码">
-<meta name="twitter:description" content="&amp;emsp;&amp;emsp;经过一周时间的学习对mapreduce开发最相关的几个流程的源码进行了分析。主要是通过大神的博客的指导来学习，但这期间还是有些吃力。hadoop这样一个庞大的工程，要是没有博客指导，都不知道从何下手。参考的博客主要是对旧版本mapreduce进行分析，我同时对新版本的源码也相应的进行了学习，新旧版本改动差距还是很大，项目结构和源码都有不小的改变。不管怎样收获还是很大，不仅对">
+<meta name="twitter:title" content="java单例模式的可序列化和readResolve()">
+<meta name="twitter:description" content="最近看《java多线程核心编程技术》的单例模式与多线程章节提到单例模式序列化与反序列化存在的问题：静态内置类可以达到线程安全问题，但如果遇到序列化对象时，使用默认的方式运行得到的结果还是多例的。解决办法是通过readResolve()方法。对此方法的原理并不清楚书中也未提及，因此学习了一下其实现原理，再此记录。">
 
 
 
@@ -124,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/31/java单例模式的可序列化和readResolve/"/>
 
 
 
 
 
-  <title> hadoop源码研究（二）-mapreduce相关源码 | The man like the wind </title>
+  <title> java单例模式的可序列化和readResolve() | The man like the wind </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -259,7 +259,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/31/java单例模式的可序列化和readResolve/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="无尴尬不青春">
@@ -283,7 +283,7 @@
             
             
               
-                hadoop源码研究（二）-mapreduce相关源码
+                java单例模式的可序列化和readResolve()
               
             
           </h1>
@@ -298,8 +298,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-21T10:40:31+08:00">
-                2017-03-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-31T14:07:23+08:00">
+                2017-03-31
               </time>
             
 
@@ -321,8 +321,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">hadoop</span>
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
                   </a>
                 </span>
 
@@ -339,8 +339,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/21/hadoop源码研究（二）-mapreduce相关源码/" itemprop="commentCount"></span>
+                <a href="/2017/03/31/java单例模式的可序列化和readResolve/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/31/java单例模式的可序列化和readResolve/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -366,14 +366,8 @@
       
 
       
-        <p>&emsp;&emsp;经过一周时间的学习对mapreduce开发最相关的几个流程的源码进行了分析。主要是通过大神的博客的指导来学习，但这期间还是有些吃力。hadoop这样一个庞大的工程，要是没有博客指导，都不知道从何下手。参考的博客主要是对旧版本mapreduce进行分析，我同时对新版本的源码也相应的进行了学习，新旧版本改动差距还是很大，项目结构和源码都有不小的改变。不管怎样收获还是很大，不仅对mapreduce有了更深入理解同时对java也起到了查漏补缺的作用。接下来还会继续对hadoop的common包进行学习。下面列出我参考的博客地址：<br><a id="more"></a><br>我是下载的hadoop2.7.3的项目源码，mapreduce相关的包的源码路径为：hadoop-2.7.3-src\hadoop-mapreduce-project\hadoop-mapreduce-client\hadoop-mapreduce-client-core</p>
-<ol>
-<li><a href="http://blog.csdn.net/androidlushangderen/article/details/41114259" target="_blank" rel="external">MapReduce的InputFormat过程的学习</a>  </li>
-<li><a href="http://blog.csdn.net/androidlushangderen/article/details/41142795" target="_blank" rel="external">Map Task内部实现分析</a>  </li>
-<li><a href="http://blog.csdn.net/androidlushangderen/article/details/41172865" target="_blank" rel="external">Partitioner分区过程分析</a>  </li>
-<li><a href="http://blog.csdn.net/androidlushangderen/article/details/41243505" target="_blank" rel="external"> Reduce Task的学习笔记</a>  </li>
-<li><a href="http://blog.csdn.net/androidlushangderen/article/details/41278351" target="_blank" rel="external">OutputFormat输出过程的学习</a>  </li>
-</ol>
+        <p>最近看《java多线程核心编程技术》的单例模式与多线程章节提到单例模式序列化与反序列化存在的问题：静态内置类可以达到线程安全问题，但如果遇到序列化对象时，使用默认的方式运行得到的结果还是多例的。解决办法是通过readResolve()方法。对此方法的原理并不清楚书中也未提及，因此学习了一下其实现原理，再此记录。<br><a id="more"></a><br>首先看一下书中单例模式代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyObject</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">888L</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyObjectHandler</span> </span>&#123;</div><div class="line">		<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> MyObject myObject = <span class="keyword">new</span> MyObject();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="title">MyObject</span><span class="params">()</span> </span>&#123;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> MyObject <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> MyObjectHandler.myObject;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"><span class="comment">//	protected Object readResolve() throws ObjectStreamException &#123;</span></div><div class="line"><span class="comment">//		System.out.println("调用了esolve方法")</span></div><div class="line"><span class="comment">//		return MyObjectHandler.myObject;</span></div><div class="line"><span class="comment">//	&#125;</span></div><div class="line"></div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SaveAndRead</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			MyObject myObject = MyObject.getInstance();</div><div class="line">			FileOutputStream fosRef = <span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(</div><div class="line">					<span class="string">"myObjectFile.txt"</span>));</div><div class="line">			ObjectOutputStream oosRef = <span class="keyword">new</span> ObjectOutputStream(fosRef);</div><div class="line">			oosRef.writeObject(myObject);</div><div class="line">			oosRef.close();</div><div class="line">			fosRef.close();</div><div class="line">			System.out.println(myObject.hashCode());</div><div class="line">		&#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</div><div class="line">			<span class="comment">// TODO Auto-generated catch block</span></div><div class="line">			e.printStackTrace();</div><div class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">			<span class="comment">// TODO Auto-generated catch block</span></div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			FileInputStream fisRef = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(</div><div class="line">					<span class="string">"myObjectFile.txt"</span>));</div><div class="line">			ObjectInputStream iosRef = <span class="keyword">new</span> ObjectInputStream(fisRef);</div><div class="line">			MyObject myObject = (MyObject) iosRef.readObject();</div><div class="line">			iosRef.close();</div><div class="line">			fisRef.close();</div><div class="line">			System.out.println(myObject.hashCode());</div><div class="line">		&#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行结果：<br>15218962<br>41771<br>去掉注释的readResolve()方法的运行结果：<br>33219526<br>调用了readResolve方法！<br>33219526<br>第一个输出结果hashcode不一致并不意外，因为一个序列化的对象在每次发序列化的时候，都会创建一个新的对象，而不仅仅是一个对原有对象的引用，所以两个对象的hashcode并不一致。但是为什么添加readResolve()方法后就是原来的对象呢，代码里并没有显示调用该方法，这个readResolve()方法是从哪来的，为什么加上之后就能返回同一实例了呢？<br>查看ObjectInputStream类源码发现方法readOrdinaryObject()里面有调用该方法的代码,这里用了java的反射机制。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (obj != <span class="keyword">null</span> &amp;&amp;</div><div class="line">            handles.lookupException(passHandle) == <span class="keyword">null</span> &amp;&amp;</div><div class="line">            desc.hasReadResolveMethod())</div><div class="line">        &#123;</div><div class="line">            Object rep = desc.invokeReadResolve(obj);</div><div class="line">            <span class="keyword">if</span> (unshared &amp;&amp; rep.getClass().isArray()) &#123;</div><div class="line">                rep = cloneArray(rep);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (rep != obj) &#123;</div><div class="line">                handles.setObject(passHandle, obj = rep);</div><div class="line">            &#125;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -418,7 +412,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+            <a href="/tags/java/" rel="tag"># java</a>
           
         </div>
       
@@ -431,8 +425,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/16/java注解详解/" rel="next" title="java注解详解">
-                <i class="fa fa-chevron-left"></i> java注解详解
+              <a href="/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/" rel="next" title="hadoop源码研究（二）-mapreduce相关源码">
+                <i class="fa fa-chevron-left"></i> hadoop源码研究（二）-mapreduce相关源码
               </a>
             
           </div>
@@ -440,10 +434,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/31/java单例模式的可序列化和readResolve/" rel="prev" title="java单例模式的可序列化和readResolve()">
-                java单例模式的可序列化和readResolve() <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -458,10 +448,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/03/21/hadoop源码研究（二）-mapreduce相关源码/"
-     data-title="hadoop源码研究（二）-mapreduce相关源码"
+        <div class="ds-share flat" data-thread-key="2017/03/31/java单例模式的可序列化和readResolve/"
+     data-title="java单例模式的可序列化和readResolve()"
      data-content=""
-     data-url="http://yoursite.com/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/">
+     data-url="http://yoursite.com/2017/03/31/java单例模式的可序列化和readResolve/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -488,8 +478,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/03/21/hadoop源码研究（二）-mapreduce相关源码/"
-           data-title="hadoop源码研究（二）-mapreduce相关源码" data-url="http://yoursite.com/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/">
+      <div class="ds-thread" data-thread-key="2017/03/31/java单例模式的可序列化和readResolve/"
+           data-title="java单例模式的可序列化和readResolve()" data-url="http://yoursite.com/2017/03/31/java单例模式的可序列化和readResolve/">
       </div>
     
   </div>
