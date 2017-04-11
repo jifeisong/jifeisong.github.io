@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="jvm," />
+  <meta name="keywords" content="mongodb," />
 
 
 
@@ -87,19 +87,16 @@
 
 
 
-<meta name="description" content="1运行时栈帧结构栈帧存储了方法的局部变量表，操作数栈，动态连接和方法返回地址等信息。编译时期确定栈帧所需内存大小。  
-1.1局部变量表局部变量表是一组变量值存储空间，用于 存放方法参数和方法内部定义的局部变量。">
+<meta name="description" content="创建索引：db.collectionName.ensureIndex({“列1”:1,”列2”:-1})   按列1升序列2降序建立索引可以自定义索引名称：db.user.ensureIndex({“name”:1,”age”:1},{“name”:”自定义名”})删除索引可以使用索引名字或者指定索引字段db.collectionName.dropIndex({“key1”:1})db.colle">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解java虚拟机-虚拟机字节码执行引擎">
-<meta property="og:url" content="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/index.html">
+<meta property="og:title" content="mongodb索引">
+<meta property="og:url" content="http://yoursite.com/2017/04/11/mongodb索引/index.html">
 <meta property="og:site_name" content="The man like the wind">
-<meta property="og:description" content="1运行时栈帧结构栈帧存储了方法的局部变量表，操作数栈，动态连接和方法返回地址等信息。编译时期确定栈帧所需内存大小。  
-1.1局部变量表局部变量表是一组变量值存储空间，用于 存放方法参数和方法内部定义的局部变量。">
-<meta property="og:updated_time" content="2017-03-06T07:19:27.706Z">
+<meta property="og:description" content="创建索引：db.collectionName.ensureIndex({“列1”:1,”列2”:-1})   按列1升序列2降序建立索引可以自定义索引名称：db.user.ensureIndex({“name”:1,”age”:1},{“name”:”自定义名”})删除索引可以使用索引名字或者指定索引字段db.collectionName.dropIndex({“key1”:1})db.colle">
+<meta property="og:updated_time" content="2017-04-11T08:10:48.793Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解java虚拟机-虚拟机字节码执行引擎">
-<meta name="twitter:description" content="1运行时栈帧结构栈帧存储了方法的局部变量表，操作数栈，动态连接和方法返回地址等信息。编译时期确定栈帧所需内存大小。  
-1.1局部变量表局部变量表是一组变量值存储空间，用于 存放方法参数和方法内部定义的局部变量。">
+<meta name="twitter:title" content="mongodb索引">
+<meta name="twitter:description" content="创建索引：db.collectionName.ensureIndex({“列1”:1,”列2”:-1})   按列1升序列2降序建立索引可以自定义索引名称：db.user.ensureIndex({“name”:1,”age”:1},{“name”:”自定义名”})删除索引可以使用索引名字或者指定索引字段db.collectionName.dropIndex({“key1”:1})db.colle">
 
 
 
@@ -127,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/11/mongodb索引/"/>
 
 
 
 
 
-  <title> 深入理解java虚拟机-虚拟机字节码执行引擎 | The man like the wind </title>
+  <title> mongodb索引 | The man like the wind </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -262,7 +259,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/mongodb索引/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="无尴尬不青春">
@@ -286,7 +283,7 @@
             
             
               
-                深入理解java虚拟机-虚拟机字节码执行引擎
+                mongodb索引
               
             
           </h1>
@@ -301,8 +298,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-06T15:18:44+08:00">
-                2017-03-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-11T16:09:50+08:00">
+                2017-04-11
               </time>
             
 
@@ -324,8 +321,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jvm/" itemprop="url" rel="index">
-                    <span itemprop="name">jvm</span>
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
                   </a>
                 </span>
 
@@ -342,8 +339,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/" itemprop="commentCount"></span>
+                <a href="/2017/04/11/mongodb索引/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/11/mongodb索引/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -369,14 +366,39 @@
       
 
       
-        <h1 id="1运行时栈帧结构"><a href="#1运行时栈帧结构" class="headerlink" title="1运行时栈帧结构"></a>1运行时栈帧结构</h1><p>栈帧存储了方法的局部变量表，操作数栈，动态连接和方法返回地址等信息。<br>编译时期确定栈帧所需内存大小。  </p>
-<h2 id="1-1局部变量表"><a href="#1-1局部变量表" class="headerlink" title="1.1局部变量表"></a>1.1局部变量表</h2><p>局部变量表是一组变量值存储空间，用于 存放方法参数和方法内部定义的局部变量。<br><a id="more"></a></p>
-<h2 id="1-2操作数栈"><a href="#1-2操作数栈" class="headerlink" title="1.2操作数栈"></a>1.2操作数栈</h2><p>用来存取方法执行过程的内容。例如算术运算通过操作数栈进行或者调用其他方法的时候通过操作数栈来进行参数传递。  </p>
-<h2 id="1-3动态连接"><a href="#1-3动态连接" class="headerlink" title="1.3动态连接"></a>1.3动态连接</h2><p>每个栈帧都包含一个只想运行时常量池中该栈帧所属方法的引用。</p>
-<h2 id="1-4方法返回地址"><a href="#1-4方法返回地址" class="headerlink" title="1.4方法返回地址"></a>1.4方法返回地址</h2><p>方法正常退出调用者的PC计数器的值可以作为返回地址，栈帧中和可能保存这个计数器值。异常退出返回地址是要通过异常处理器表确定，栈帧一般不会保存这部分信息</p>
-<h1 id="2方法调用"><a href="#2方法调用" class="headerlink" title="2方法调用"></a>2方法调用</h1><p>方法调用不等于方法执行，方法调用唯一的任务就是确定被调用方法的版本，暂时还不涉及方法内部的具体运行过程。</p>
-<h2 id="2-1解析"><a href="#2-1解析" class="headerlink" title="2.1解析"></a>2.1解析</h2><p>方法在程序真正运行之前就有确定的调用版本，并且运行期不可变，这类方法调用成为解析。这类方法主要有静态方法和私有方法。<br>解析调用是静态过程，编译期间确定，类装载的解析阶段就会把符号引用全部转为直接引用。  </p>
-<h2 id="2-2分派"><a href="#2-2分派" class="headerlink" title="2.2分派"></a>2.2分派</h2><p>Human man=new Man();// Human成为变量的静态类型，Man实际类型<br><strong>静态分配：</strong><br>所有依赖静态类型来定位方法执行版本的分派动作称为静态分配。静态分配和重载相关。<br><strong>动态分派：</strong><br>在运行期根据实际类型确定方法执行版本的分派过程成为动态分配。动态分配与重写相关。<br><strong>单分派与多分派：</strong><br>方法的接收者与方法的参数统称为方法宗量。<br>静态多分派，动态单分派</p>
+        <p>创建索引：db.collectionName.ensureIndex({“列1”:1,”列2”:-1})   按列1升序列2降序建立索引<br>可以自定义索引名称：db.user.ensureIndex({“name”:1,”age”:1},{“name”:”自定义名”})<br>删除索引可以使用索引名字或者指定索引字段<br>db.collectionName.dropIndex({“key1”:1})<br>db.collectionName.dropIndex(“索引名字”)<br><strong>最大范围：</strong>  </p>
+<ul>
+<li>集合中索引不能超过64个</li>
+<li>索引名的长度不能超过125个字符</li>
+<li>一个复合索引最多可以有31个字段</li>
+<li>字段值长度超过1KB不会被索引</li>
+</ul>
+<a id="more"></a>
+<h1 id="1使用复合索引"><a href="#1使用复合索引" class="headerlink" title="1使用复合索引"></a>1使用复合索引</h1><h2 id="1-1索引键的方向"><a href="#1-1索引键的方向" class="headerlink" title="1.1索引键的方向"></a>1.1索引键的方向</h2><p>互相反转的索引是等价的｛“列1”：1，“列”：-1｝和｛“列1”：-1，“列”：1｝的单一键排序查询是等价的。基于多建的排序方向才重要。  </p>
+<h2 id="1-2覆盖索引"><a href="#1-2覆盖索引" class="headerlink" title="1.2覆盖索引"></a>1.2覆盖索引</h2><p>如果查询只需要查询索引中包含的字段，那就没必要查询实际的文档，保证工作集比较小。在含有数组的字段上做索引，这个索引永远无法覆盖查询。  </p>
+<h2 id="1-3隐式索引"><a href="#1-3隐式索引" class="headerlink" title="1.3隐式索引"></a>1.3隐式索引</h2><p>如果拥有了N个键的索引，那么同时拥有了所有这N个键的前缀组成的索引，例如如果有｛“a”：1，“b”：1，“c”：1｝索引，那么我们可以使用｛“a”：1｝，｛“a”：1，“b”：1｝这两个索引</p>
+<h2 id="1-3-操作符使用索引"><a href="#1-3-操作符使用索引" class="headerlink" title="1.3$操作符使用索引"></a>1.3$操作符使用索引</h2><h3 id="1-3-1低效率的操作符"><a href="#1-3-1低效率的操作符" class="headerlink" title="1.3.1低效率的操作符"></a>1.3.1低效率的操作符</h3><p>一些查询无法使用索引，比如$where查询和检查键是否存在的查询（｛“key”：｛“$exists”:true｝｝），<br>取反效率比较低，$ne查询可以使用索引，但是不高效，因为要扫描整个索引。（如果返回的结果集很少效率还是不错的），<br>大多数$not查询会退化为进行全表扫描，$nin总是全表扫描  </p>
+<h3 id="1-3-2范围"><a href="#1-3-2范围" class="headerlink" title="1.3.2范围"></a>1.3.2范围</h3><p>设计索引时应该将会用于精确匹配的字段放在索引前面，将用于范围查询的字段放在后面。  </p>
+<h3 id="1-3-3OR查询"><a href="#1-3-3OR查询" class="headerlink" title="1.3.3OR查询"></a>1.3.3OR查询</h3><p>一次查询只能使用一个索引。如果在｛“x”：1｝和｛“y”：1｝分别建立索引，查询时使用｛“x”：23，“y”：“a”｝则只会使用一个索引。但是$or可以同时使用两个索引，其实是两次查询然后取并集（这里应该尽量使用$in,两次查询要比单次查询慢，db.ortest.find({“x”:{“$in”:[1,2]}})）。</p>
+<h2 id="1-4索引对象和数组"><a href="#1-4索引对象和数组" class="headerlink" title="1.4索引对象和数组"></a>1.4索引对象和数组</h2><h3 id="1-4-1索引嵌套文档"><a href="#1-4-1索引嵌套文档" class="headerlink" title="1.4.1索引嵌套文档"></a>1.4.1索引嵌套文档</h3><p>可以通过点号来对任意深层次的字段建立索引，例如db.test.ensureIndex({“x.y.z”:1})<br>注意：对嵌套文档本身建立索引和对嵌套文档某个字段建立索引是不同的，对整个子文档建立索引只有在进行与子文档字段顺序完全匹配的子文档查询时才会使用索引。  </p>
+<h3 id="1-4-2索引数组"><a href="#1-4-2索引数组" class="headerlink" title="1.4.2索引数组"></a>1.4.2索引数组</h3><p>对数组建立索引其实是对数组的每一个元素建立一个索引条目。一个索引中的数组字段最多只能有一个，避免爆炸性增长（n*m个索引条目）</p>
+<h3 id="1-4-2多键索引"><a href="#1-4-2多键索引" class="headerlink" title="1.4.2多键索引"></a>1.4.2多键索引</h3><p>对于某个索引的键，如果这个键在某个文档中是一个数组，那么这个索引就标记为多键索引。一旦被标记为多键索引就无法变为非多键索引了，除非删除 重建。</p>
+<h2 id="1-5索引基数"><a href="#1-5索引基数" class="headerlink" title="1.5索引基数"></a>1.5索引基数</h2><p>基数就是某个字段拥有不同值的数量。一般来说应该在技术大的字段上建立索引</p>
+<h1 id="2使用explain-和hint"><a href="#2使用explain-和hint" class="headerlink" title="2使用explain()和hint()"></a>2使用explain()和hint()</h1><p>explain()相关知识查看mongodb查询计划学习整理</p>
+<p>如果发现mongodb使用的索引和自己希望使用的索引不一致可以使用hit()强制mongodb使用特定索引<br>db.c.find({“username”:”a”,”age”:1}).hint({“username”:1,”age”:1})<br><strong>查询优化器</strong>：如果一个索引能够精确匹配一个查询（要查“x”，“x”上有一个索引）那么查询优化器就会使用这个索引。不然的话可能会有多个索引都适合这次查询，优化器会同时并行执行多个查询计划，最先返回100个结果的胜出，其他查询计划终止。胜出查询计划会被缓存，这个查询接下来都会使用他，直到集合数据发生较大变化。建立索引时或者每执行1000次查询后，优化器都会重新评估查询计划。</p>
+<h1 id="3何时不该使用索引"><a href="#3何时不该使用索引" class="headerlink" title="3何时不该使用索引"></a>3何时不该使用索引</h1><p>使用索引会进行两次查询：1查找索引条目，2根据索引指针查找文档。<br>因此提取较小结果集时索引非常高效，但是结果集所占集合比例越大，索引速度越慢，甚至不如全表扫描速度快。可以通过hint({“$natural”:1})强制数据库做全表扫描。</p>
+<h1 id="4索引类型"><a href="#4索引类型" class="headerlink" title="4索引类型"></a>4索引类型</h1><h2 id="4-1唯一索引"><a href="#4-1唯一索引" class="headerlink" title="4.1唯一索引"></a>4.1唯一索引</h2><p>db.user.ensureIndex({“username”:1},{“unique”:true})<br><strong>注意：</strong>  </p>
+<ul>
+<li>如果试图插入相同username的文档会报错  </li>
+<li>一个文档没有对应键，索引会将其作为null存储，如果插入多个缺少索引键字段的文档，会报错  </li>
+<li>超过1KB的键不会被索引  </li>
+</ul>
+<p><strong>复合唯一索引：</strong> 复合唯一索引单个键值可以重复，所有键的组合值必须唯一<br><strong>去除重复：</strong> 在已有集合上创建索引可能会失败，集合中已经有重复值，使用dropDups第一个重复值保留后续重复文档被删除。db.people.ensureIndex({“username”:1},{“unique”:true,”dropDups”:true})  </p>
+<h2 id="4-2稀疏索引"><a href="#4-2稀疏索引" class="headerlink" title="4.2稀疏索引"></a>4.2稀疏索引</h2><p>mongodb的稀疏索引和关系型数据库的稀疏索引不是一个概念，mongodb的稀疏索引指的是不将不包含索引字段的文档作为索引条目，通过关键字spares设置。<br>db.users.insureIndex({“email”:1},{“unique”:true,”sparse”:true})稀疏索引不必是唯一的，去掉unique就可以创建非唯一索引。<br>进行非等值查询时如果索引键为空那么这条文档不会返回，可以通过hint进行全表扫描返回键值为空的文档。</p>
+<h1 id="5索引管理"><a href="#5索引管理" class="headerlink" title="5索引管理"></a>5索引管理</h1><p>创建索引可以指定background选项，不然创建索引的过程会阻塞数据的读写请求，知道索引创建完毕<br>创建索引db.collectionName.ensureIndex({“key1”:1})  </p>
+<p>查看索引 db.collectionName.getIndexes()</p>
+<h2 id="5-1标识索引"><a href="#5-1标识索引" class="headerlink" title="5.1标识索引"></a>5.1标识索引</h2><p>索引默认名称是keyname1_dir1_keyname2_dir2…其中keynamex是索引键，dirx是索引方向（1或-1）<br>可以自定义索引名称：db.user.ensureIndex({“name”:1,”age”:1},{“name”:”自定义名”})</p>
+<h2 id="5-2修改索引"><a href="#5-2修改索引" class="headerlink" title="5.2修改索引"></a>5.2修改索引</h2><p>删除索引可以使用索引名字或者指定索引字段<br>db.collectionName.dropIndex({“key1”:1})<br>db.collectionName.dropIndex(“索引名字”)</p>
 
       
     </div>
@@ -421,7 +443,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/jvm/" rel="tag"># jvm</a>
+            <a href="/tags/mongodb/" rel="tag"># mongodb</a>
           
         </div>
       
@@ -434,8 +456,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/06/深入理解java虚拟机-虚拟机类加载机制/" rel="next" title="深入理解java虚拟机-虚拟机类加载机制">
-                <i class="fa fa-chevron-left"></i> 深入理解java虚拟机-虚拟机类加载机制
+              <a href="/2017/04/10/mongodb查询计划整理/" rel="next" title="mongodb查询计划整理">
+                <i class="fa fa-chevron-left"></i> mongodb查询计划整理
               </a>
             
           </div>
@@ -443,10 +465,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/15/hadoop源码研究（一）-概述/" rel="prev" title="hadoop源码研究（一）-概述">
-                hadoop源码研究（一）-概述 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -461,10 +479,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/"
-     data-title="深入理解java虚拟机-虚拟机字节码执行引擎"
+        <div class="ds-share flat" data-thread-key="2017/04/11/mongodb索引/"
+     data-title="mongodb索引"
      data-content=""
-     data-url="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/">
+     data-url="http://yoursite.com/2017/04/11/mongodb索引/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -491,8 +509,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/"
-           data-title="深入理解java虚拟机-虚拟机字节码执行引擎" data-url="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/">
+      <div class="ds-thread" data-thread-key="2017/04/11/mongodb索引/"
+           data-title="mongodb索引" data-url="http://yoursite.com/2017/04/11/mongodb索引/">
       </div>
     
   </div>
@@ -632,7 +650,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1运行时栈帧结构"><span class="nav-number">1.</span> <span class="nav-text">1运行时栈帧结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1局部变量表"><span class="nav-number">1.1.</span> <span class="nav-text">1.1局部变量表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2操作数栈"><span class="nav-number">1.2.</span> <span class="nav-text">1.2操作数栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3动态连接"><span class="nav-number">1.3.</span> <span class="nav-text">1.3动态连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4方法返回地址"><span class="nav-number">1.4.</span> <span class="nav-text">1.4方法返回地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2方法调用"><span class="nav-number">2.</span> <span class="nav-text">2方法调用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1解析"><span class="nav-number">2.1.</span> <span class="nav-text">2.1解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2分派"><span class="nav-number">2.2.</span> <span class="nav-text">2.2分派</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1使用复合索引"><span class="nav-number">1.</span> <span class="nav-text">1使用复合索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1索引键的方向"><span class="nav-number">1.1.</span> <span class="nav-text">1.1索引键的方向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2覆盖索引"><span class="nav-number">1.2.</span> <span class="nav-text">1.2覆盖索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3隐式索引"><span class="nav-number">1.3.</span> <span class="nav-text">1.3隐式索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-操作符使用索引"><span class="nav-number">1.4.</span> <span class="nav-text">1.3$操作符使用索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-1低效率的操作符"><span class="nav-number">1.4.1.</span> <span class="nav-text">1.3.1低效率的操作符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-2范围"><span class="nav-number">1.4.2.</span> <span class="nav-text">1.3.2范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-3OR查询"><span class="nav-number">1.4.3.</span> <span class="nav-text">1.3.3OR查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4索引对象和数组"><span class="nav-number">1.5.</span> <span class="nav-text">1.4索引对象和数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-1索引嵌套文档"><span class="nav-number">1.5.1.</span> <span class="nav-text">1.4.1索引嵌套文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-2索引数组"><span class="nav-number">1.5.2.</span> <span class="nav-text">1.4.2索引数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-2多键索引"><span class="nav-number">1.5.3.</span> <span class="nav-text">1.4.2多键索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5索引基数"><span class="nav-number">1.6.</span> <span class="nav-text">1.5索引基数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2使用explain-和hint"><span class="nav-number">2.</span> <span class="nav-text">2使用explain()和hint()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3何时不该使用索引"><span class="nav-number">3.</span> <span class="nav-text">3何时不该使用索引</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4索引类型"><span class="nav-number">4.</span> <span class="nav-text">4索引类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1唯一索引"><span class="nav-number">4.1.</span> <span class="nav-text">4.1唯一索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2稀疏索引"><span class="nav-number">4.2.</span> <span class="nav-text">4.2稀疏索引</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5索引管理"><span class="nav-number">5.</span> <span class="nav-text">5索引管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1标识索引"><span class="nav-number">5.1.</span> <span class="nav-text">5.1标识索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2修改索引"><span class="nav-number">5.2.</span> <span class="nav-text">5.2修改索引</span></a></li></ol></li></ol></div>
             
 
           </div>
