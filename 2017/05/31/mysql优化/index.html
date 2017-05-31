@@ -101,7 +101,7 @@
 查看InnoDB存储引擎执行次数：show status like “InnoDB_%”  
 视图连接mysql服务器的次数：show status like “connnections”  
 服务器工作时间：">
-<meta property="og:updated_time" content="2017-05-31T07:44:38.482Z">
+<meta property="og:updated_time" content="2017-05-31T08:00:45.406Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql优化">
 <meta name="twitter:description" content="1sql优化1.1优化sql的一般步骤1.1.1通过show status查看各种sql执行频率
@@ -383,7 +383,8 @@
 <li>查看InnoDB存储引擎执行次数：show status like “InnoDB_%”  </li>
 <li>视图连接mysql服务器的次数：show status like “connnections”  </li>
 <li>服务器工作时间：show status like “Uptime”</li>
-<li>慢查询次数：show status like “Slow_queries”</li>
+<li>慢查询次数：show status like “Slow_queries”<a id="more"></a> 
+</li>
 </ul>
 <h3 id="1-1-2定位执行效率较低的sql"><a href="#1-1-2定位执行效率较低的sql" class="headerlink" title="1.1.2定位执行效率较低的sql"></a>1.1.2定位执行效率较低的sql</h3><ul>
 <li>方法一： 通过慢查询日志定位（查询结束才会记录）<br>用–log-slow-queries[=file_name]选项启动，mysqld写一个包含所有执行时间超过long_query_time秒的sql语句的 日志文件</li>
