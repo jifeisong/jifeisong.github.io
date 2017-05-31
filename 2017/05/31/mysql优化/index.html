@@ -101,7 +101,7 @@
 查看InnoDB存储引擎执行次数：show status like “InnoDB_%”  
 视图连接mysql服务器的次数：show status like “connnections”  
 服务器工作时间：">
-<meta property="og:updated_time" content="2017-05-31T07:04:45.835Z">
+<meta property="og:updated_time" content="2017-05-31T07:36:06.775Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql优化">
 <meta name="twitter:description" content="1sql优化1.1优化sql的一般步骤1.1.1通过show status查看各种sql执行频率
@@ -383,13 +383,57 @@
 <li>查看InnoDB存储引擎执行次数：show status like “InnoDB_%”  </li>
 <li>视图连接mysql服务器的次数：show status like “connnections”  </li>
 <li>服务器工作时间：show status like “Uptime”</li>
-<li>慢查询次数：show status like “Slow_queries”<h3 id="1-1-2定位执行效率较低的sql"><a href="#1-1-2定位执行效率较低的sql" class="headerlink" title="1.1.2定位执行效率较低的sql"></a>1.1.2定位执行效率较低的sql</h3></li>
+<li>慢查询次数：show status like “Slow_queries”<a id="more"></a> 
+<h3 id="1-1-2定位执行效率较低的sql"><a href="#1-1-2定位执行效率较低的sql" class="headerlink" title="1.1.2定位执行效率较低的sql"></a>1.1.2定位执行效率较低的sql</h3></li>
 <li>方法一： 通过慢查询日志定位（查询结束才会记录）<br>用–log-slow-queries[=file_name]选项启动，mysqld写一个包含所有执行时间超过long_query_time秒的sql语句的 日志文件</li>
-<li>方法二：show processlist查看当前mysql的线程状态<h3 id="1-1-3通过explan分析低效sql的执行计划"><a href="#1-1-3通过explan分析低效sql的执行计划" class="headerlink" title="1.1.3通过explan分析低效sql的执行计划"></a>1.1.3通过explan分析低效sql的执行计划</h3></li>
-<li>查看执行计划：explain 查询sql<a id="more"></a> 
-列名| 说明<br>—|—<br>select_type| select类型，常见有simple（简单表，即不使用表连接或子查询），primary（主查询，即外层的查询），union（union中的第二个或者后面的查询语句），subquery（子查询中的第一个select）等<br>table | 输出结果集的表<br>type |表示mysql在表中找到所需行的方式<br>possible_key |查询时可能使用的索引<br>key |实际使用的索引<br>key_len |使用到索引字段的长度<br>rows |扫描行的数量<br>Extra|执行情况的说明和描述</li>
+<li>方法二：show processlist查看当前mysql的线程状态</li>
 </ul>
-<p>type类型描述:<br>从左至右，性能由最差到最好<br>ALL | index | range | ref | qu_ref | const,system | NULL<br>—|—|—|—|—|—|—</p>
+<h3 id="1-1-3通过explan分析低效sql的执行计划"><a href="#1-1-3通过explan分析低效sql的执行计划" class="headerlink" title="1.1.3通过explan分析低效sql的执行计划"></a>1.1.3通过explan分析低效sql的执行计划</h3><ul>
+<li>查看执行计划：explain 查询sql</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>select_type</td>
+<td>select类型，常见有simple（简单表，即不使用表连接或子查询），primary（主查询，即外层的查询），union（union中的第二个或者后面的查询语句），subquery（子查询中的第一个select）等</td>
+</tr>
+<tr>
+<td>table</td>
+<td>输出结果集的表</td>
+</tr>
+<tr>
+<td>type</td>
+<td>表示mysql在表中找到所需行的方式</td>
+</tr>
+<tr>
+<td>possible_key</td>
+<td>查询时可能使用的索引</td>
+</tr>
+<tr>
+<td>key</td>
+<td>实际使用的索引</td>
+</tr>
+<tr>
+<td>key_len</td>
+<td>使用到索引字段的长度</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>扫描行的数量</td>
+</tr>
+<tr>
+<td>Extra</td>
+<td>执行情况的说明和描述</td>
+</tr>
+</tbody>
+</table>
+<p>type类型描述:<br>从左至右，性能由最差到最好<br>ALL | index | range | ref | qu_ref | const,system | NULL</p>
 <table>
 <thead>
 <tr>
@@ -455,12 +499,14 @@
 <li>查看执行sql的id和时间：show profiles</li>
 <li>查看某个sql的详细信息：show profile for query queryID</li>
 <li>也可以通过表information_schema.PROFILING查看详细信息</li>
-<li>查看资源耗时：show profile cpu[all|cpu|block io|contenxt switch|page faults] for query queryID<h3 id="1-1-5通过trace分析优化器如何选择执行计划"><a href="#1-1-5通过trace分析优化器如何选择执行计划" class="headerlink" title="1.1.5通过trace分析优化器如何选择执行计划"></a>1.1.5通过trace分析优化器如何选择执行计划</h3></li>
+<li>查看资源耗时：show profile cpu[all|cpu|block io|contenxt switch|page faults] for query queryID</li>
+</ul>
+<h3 id="1-1-5通过trace分析优化器如何选择执行计划"><a href="#1-1-5通过trace分析优化器如何选择执行计划" class="headerlink" title="1.1.5通过trace分析优化器如何选择执行计划"></a>1.1.5通过trace分析优化器如何选择执行计划</h3><ul>
 <li>打开trac设置格式为json：set OPTIMIZER_TRACE=”enabled=on”,END_MARKERS_IN_JSON=ON;</li>
 <li>设置trac最大内存：set OPTIMIZER_TRACE_MAX_MEM_SIZE=1000000;</li>
-<li>查看tracn：SELECT * from information_schema.OPTIMIZER_TRACE<h2 id="1-2索引问题"><a href="#1-2索引问题" class="headerlink" title="1.2索引问题"></a>1.2索引问题</h2><h3 id="1-2-1索引的存储分类"><a href="#1-2-1索引的存储分类" class="headerlink" title="1.2.1索引的存储分类"></a>1.2.1索引的存储分类</h3></li>
+<li>查看tracn：SELECT * from information_schema.OPTIMIZER_TRACE</li>
 </ul>
-<table>
+<h2 id="1-2索引问题"><a href="#1-2索引问题" class="headerlink" title="1.2索引问题"></a>1.2索引问题</h2><h3 id="1-2-1索引的存储分类"><a href="#1-2-1索引的存储分类" class="headerlink" title="1.2.1索引的存储分类"></a>1.2.1索引的存储分类</h3><table>
 <thead>
 <tr>
 <th>索引类型</th>
@@ -511,11 +557,14 @@
 <li>数据类型出现隐式转换不会走索引</li>
 <li>复合索引情况下，如果查询条件不包括索引最左列，不会使用索引</li>
 <li>如果mysql估计使用索引比全表扫描更慢则不使用索引（例如批量查询）</li>
-<li>用or分割开的条件，如果or前的条件中的列有索引，而后面的列中没有索引那么涉及到的索引都不会被引用<h3 id="1-2-3查看索引使用情况"><a href="#1-2-3查看索引使用情况" class="headerlink" title="1.2.3查看索引使用情况"></a>1.2.3查看索引使用情况</h3>查询：show status like ‘Handler_read%’;<br>Handler_read_key:代表一个行被索引值读的次数，越高代表索引经常使用<br>Handler_read_rnd_next:该值代表数据文件中读下一行的请求数，值越高代表索引使用越低<h2 id="1-3两个简单实用的优化方法"><a href="#1-3两个简单实用的优化方法" class="headerlink" title="1.3两个简单实用的优化方法"></a>1.3两个简单实用的优化方法</h2><h3 id="1-3-1定期分析表和检查表"><a href="#1-3-1定期分析表和检查表" class="headerlink" title="1.3.1定期分析表和检查表"></a>1.3.1定期分析表和检查表</h3></li>
-<li>分析表语法(对myisam和InnoDB有效)：ANALYZE[LOCAL|NO_WRITE_TO_BINLOG]TABLE table_name[,table_name]…<br>作用：分析和存储表的关键字分布，分析的结果可以使得系统得到准确的统计信息，使sql能正确的生成执行计划</li>
-<li>检查表语法（myisam和InnoDB有效）:CHECK TABLE tab_name[,tab_name,tab_name]…[option]…option={QUICK|FAST|MEDIUM|EXTENDED|CHANGED}<br>作用：检查一个或多个表是否有错误<h3 id="1-3-2定期优化表"><a href="#1-3-2定期优化表" class="headerlink" title="1.3.2定期优化表"></a>1.3.2定期优化表</h3>语法： OPTIMIZE[LOCAL|NO_WRITE_TO_BINLOG]TABLE tab_name[,tab_name]…<br>功能：对于有可变长度的表，清理更改带来的空间碎片<br>  对于InnoDB的表来说通过设置innodb_file_per_table参数，设置InnoDB为独立表空间模式，这样每个数据库的每个表都会生成独立ibd文件，用于存储表的数据和索引，一定程度减轻表空间回收。在删除大量数据后InnoDB表可以通过alter table但是不修改引擎的方式回收不可用的空间：alter table name engine=innodb<br>注意：analyze，check，optimize，alter table都会锁表，因此要在数据库不忙的时候操作<h2 id="1-4常用sql优化"><a href="#1-4常用sql优化" class="headerlink" title="1.4常用sql优化"></a>1.4常用sql优化</h2><h3 id="1-4-1大批量插入数据"><a href="#1-4-1大批量插入数据" class="headerlink" title="1.4.1大批量插入数据"></a>1.4.1大批量插入数据</h3></li>
+<li>用or分割开的条件，如果or前的条件中的列有索引，而后面的列中没有索引那么涉及到的索引都不会被引用</li>
 </ul>
-<ol>
+<h3 id="1-2-3查看索引使用情况"><a href="#1-2-3查看索引使用情况" class="headerlink" title="1.2.3查看索引使用情况"></a>1.2.3查看索引使用情况</h3><p>查询：show status like ‘Handler_read%’;<br>Handler_read_key:代表一个行被索引值读的次数，越高代表索引经常使用<br>Handler_read_rnd_next:该值代表数据文件中读下一行的请求数，值越高代表索引使用越低</p>
+<h2 id="1-3两个简单实用的优化方法"><a href="#1-3两个简单实用的优化方法" class="headerlink" title="1.3两个简单实用的优化方法"></a>1.3两个简单实用的优化方法</h2><h3 id="1-3-1定期分析表和检查表"><a href="#1-3-1定期分析表和检查表" class="headerlink" title="1.3.1定期分析表和检查表"></a>1.3.1定期分析表和检查表</h3><ul>
+<li>分析表语法(对myisam和InnoDB有效)：ANALYZE[LOCAL|NO_WRITE_TO_BINLOG]TABLE table_name[,table_name]…<br>作用：分析和存储表的关键字分布，分析的结果可以使得系统得到准确的统计信息，使sql能正确的生成执行计划</li>
+<li>检查表语法（myisam和InnoDB有效）:CHECK TABLE tab_name[,tab_name,tab_name]…[option]…option={QUICK|FAST|MEDIUM|EXTENDED|CHANGED}<br>作用：检查一个或多个表是否有错误<h3 id="1-3-2定期优化表"><a href="#1-3-2定期优化表" class="headerlink" title="1.3.2定期优化表"></a>1.3.2定期优化表</h3>语法： OPTIMIZE[LOCAL|NO_WRITE_TO_BINLOG]TABLE tab_name[,tab_name]…<br>功能：对于有可变长度的表，清理更改带来的空间碎片<br>  对于InnoDB的表来说通过设置innodb_file_per_table参数，设置InnoDB为独立表空间模式，这样每个数据库的每个表都会生成独立ibd文件，用于存储表的数据和索引，一定程度减轻表空间回收。在删除大量数据后InnoDB表可以通过alter table但是不修改引擎的方式回收不可用的空间：alter table name engine=innodb<br>注意：analyze，check，optimize，alter table都会锁表，因此要在数据库不忙的时候操作</li>
+</ul>
+<h2 id="1-4常用sql优化"><a href="#1-4常用sql优化" class="headerlink" title="1.4常用sql优化"></a>1.4常用sql优化</h2><h3 id="1-4-1大批量插入数据"><a href="#1-4-1大批量插入数据" class="headerlink" title="1.4.1大批量插入数据"></a>1.4.1大批量插入数据</h3><ol>
 <li>MyISAM导入优化<br>ALTER TABLE tab_name DISABLE KEYS;<br>load data<br>ALTER TABLE tab_nam ENABLE KEYS;</li>
 <li>InnoDB导入优化<ul>
 <li>因为InnoDB类型的表是按照主键顺序保存的，所以导入的数据按照主键排序可提高导入效率</li>
@@ -552,13 +601,20 @@
 <ul>
 <li>max_length_for_sort_data参数和query语句取出的字段总大小做比较，如果参数更大则用一次扫描算法。可以适当调大该参数</li>
 <li>适当加大sort_buffer_size</li>
-<li>尽量只select必要的字段<h3 id="1-4-4-优化group-by语句"><a href="#1-4-4-优化group-by语句" class="headerlink" title="1.4.4 优化group by语句"></a>1.4.4 优化group by语句</h3>默认情况下，mysql对所有group by col1，col2，…的字段进行排序。如果显示包含一个想同列order by对性能没有影响。如果查询年包含group by但又想避免排序，可以指定order by null禁止排序<h3 id="1-4-5优化嵌套查询"><a href="#1-4-5优化嵌套查询" class="headerlink" title="1.4.5优化嵌套查询"></a>1.4.5优化嵌套查询</h3>一些in子查询改为jion查询<h3 id="1-4-6优化or条件"><a href="#1-4-6优化or条件" class="headerlink" title="1.4.6优化or条件"></a>1.4.6优化or条件</h3>如果想要用索引则or条件的每个列上都要有索引<h3 id="1-4-7优化分页查询"><a href="#1-4-7优化分页查询" class="headerlink" title="1.4.7优化分页查询"></a>1.4.7优化分页查询</h3></li>
-<li>第一种优化思路<br>在索引上完成排序分页，最后根据主键关联回原表查询所需要的其他列内容。<br>select * from tab1 a inner join (select key from tab1 order by index_col limit 50,5)b on a.key=b.key</li>
-<li>第二种优化思路 (仅适用排序字段无重复值的情况)<br>把limit查询转为某个位置的查询，需要记录上页的最后一行的排序列的值<br>select * from tabname where col1&lt;lastvalue order by col1 desc limit pagesize;<h3 id="1-4-8使用sql提示"><a href="#1-4-8使用sql提示" class="headerlink" title="1.4.8使用sql提示"></a>1.4.8使用sql提示</h3></li>
-<li>USE INDEX:提供希望mysql参考的索引<br>select count(*) from from rental use index(indxname)</li>
-<li>IGNORE INDEX: 想让mysql忽略的指定索引<br>select count(<em>) from retal ignore index(indexname)<br>-FORCE INDEX:强制mysql使用指定索引<br>select count(</em>) from rental force index(indexname)<h1 id="1-5常用sql技巧"><a href="#1-5常用sql技巧" class="headerlink" title="1.5常用sql技巧"></a>1.5常用sql技巧</h1><h2 id="1-5-1正则表达式的使用"><a href="#1-5-1正则表达式的使用" class="headerlink" title="1.5.1正则表达式的使用"></a>1.5.1正则表达式的使用</h2></li>
+<li>尽量只select必要的字段</li>
 </ul>
-<table>
+<h3 id="1-4-4-优化group-by语句"><a href="#1-4-4-优化group-by语句" class="headerlink" title="1.4.4 优化group by语句"></a>1.4.4 优化group by语句</h3><p>默认情况下，mysql对所有group by col1，col2，…的字段进行排序。如果显示包含一个想同列order by对性能没有影响。如果查询年包含group by但又想避免排序，可以指定order by null禁止排序</p>
+<h3 id="1-4-5优化嵌套查询"><a href="#1-4-5优化嵌套查询" class="headerlink" title="1.4.5优化嵌套查询"></a>1.4.5优化嵌套查询</h3><p>一些in子查询改为jion查询</p>
+<h3 id="1-4-6优化or条件"><a href="#1-4-6优化or条件" class="headerlink" title="1.4.6优化or条件"></a>1.4.6优化or条件</h3><p>如果想要用索引则or条件的每个列上都要有索引</p>
+<h3 id="1-4-7优化分页查询"><a href="#1-4-7优化分页查询" class="headerlink" title="1.4.7优化分页查询"></a>1.4.7优化分页查询</h3><ul>
+<li>第一种优化思路<br>在索引上完成排序分页，最后根据主键关联回原表查询所需要的其他列内容。<br>select * from tab1 a inner join (select key from tab1 order by index_col limit 50,5)b on a.key=b.key</li>
+<li>第二种优化思路 (仅适用排序字段无重复值的情况)<br>把limit查询转为某个位置的查询，需要记录上页的最后一行的排序列的值<br>select * from tabname where col1&lt;lastvalue order by col1 desc limit pagesize;</li>
+</ul>
+<h3 id="1-4-8使用sql提示"><a href="#1-4-8使用sql提示" class="headerlink" title="1.4.8使用sql提示"></a>1.4.8使用sql提示</h3><ul>
+<li>USE INDEX:提供希望mysql参考的索引<br>select count(*) from from rental use index(indxname)</li>
+<li>IGNORE INDEX: 想让mysql忽略的指定索引<br>select count(<em>) from retal ignore index(indexname)<br>-FORCE INDEX:强制mysql使用指定索引<br>select count(</em>) from rental force index(indexname)</li>
+</ul>
+<h1 id="1-5常用sql技巧"><a href="#1-5常用sql技巧" class="headerlink" title="1.5常用sql技巧"></a>1.5常用sql技巧</h1><h2 id="1-5-1正则表达式的使用"><a href="#1-5-1正则表达式的使用" class="headerlink" title="1.5.1正则表达式的使用"></a>1.5.1正则表达式的使用</h2><table>
 <thead>
 <tr>
 <th>序列</th>
@@ -657,7 +713,10 @@
 <h2 id="2-2通过拆分提高表的访问效率"><a href="#2-2通过拆分提高表的访问效率" class="headerlink" title="2.2通过拆分提高表的访问效率"></a>2.2通过拆分提高表的访问效率</h2><p>myisam表拆分：  </p>
 <ul>
 <li>垂直拆分：主码和一些列放到一个表，然后把主码和另外的列放到另一个表中。适用于一张表中某些列常用，另一些列不常用。<br>优点：数据行减少，查询io次数变少。<br>缺点：管理冗余列，查所有数据需要join</li>
-<li>水平拆分：根据一列或多列的值把数据放到两个独立的表<br>优点：降低读取数据和索引层数，提高查询速度<br>缺点:增加复杂度，多个表需要union<h2 id="2-3逆规范化"><a href="#2-3逆规范化" class="headerlink" title="2.3逆规范化"></a>2.3逆规范化</h2>常用逆规范技术：</li>
+<li>水平拆分：根据一列或多列的值把数据放到两个独立的表<br>优点：降低读取数据和索引层数，提高查询速度<br>缺点:增加复杂度，多个表需要union</li>
+</ul>
+<h2 id="2-3逆规范化"><a href="#2-3逆规范化" class="headerlink" title="2.3逆规范化"></a>2.3逆规范化</h2><p>常用逆规范技术：</p>
+<ul>
 <li>增加冗余列：避免连接操作</li>
 <li>增加派生列:由其他表的数据计算而来，减少连接避免使用集函数</li>
 <li>重新组表：两个表组成一个表，减少连接提高性能</li>

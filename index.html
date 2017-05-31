@@ -373,10 +373,7 @@
 <li>查看InnoDB存储引擎执行次数：show status like “InnoDB_%”  </li>
 <li>视图连接mysql服务器的次数：show status like “connnections”  </li>
 <li>服务器工作时间：show status like “Uptime”</li>
-<li>慢查询次数：show status like “Slow_queries”<h3 id="1-1-2定位执行效率较低的sql"><a href="#1-1-2定位执行效率较低的sql" class="headerlink" title="1.1.2定位执行效率较低的sql"></a>1.1.2定位执行效率较低的sql</h3></li>
-<li>方法一： 通过慢查询日志定位（查询结束才会记录）<br>用–log-slow-queries[=file_name]选项启动，mysqld写一个包含所有执行时间超过long_query_time秒的sql语句的 日志文件</li>
-<li>方法二：show processlist查看当前mysql的线程状态<h3 id="1-1-3通过explan分析低效sql的执行计划"><a href="#1-1-3通过explan分析低效sql的执行计划" class="headerlink" title="1.1.3通过explan分析低效sql的执行计划"></a>1.1.3通过explan分析低效sql的执行计划</h3></li>
-<li>查看执行计划：explain 查询sql
+<li>慢查询次数：show status like “Slow_queries”
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/05/31/mysql优化/#more" rel="contents">
