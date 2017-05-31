@@ -257,6 +257,171 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/31/mysql优化/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="无尴尬不青春">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/11.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="The man like the wind">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="The man like the wind" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/31/mysql优化/" itemprop="url">
+                  mysql优化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-31T15:03:02+08:00">
+                2017-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/05/31/mysql优化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/31/mysql优化/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="1sql优化"><a href="#1sql优化" class="headerlink" title="1sql优化"></a>1sql优化</h1><h2 id="1-1优化sql的一般步骤"><a href="#1-1优化sql的一般步骤" class="headerlink" title="1.1优化sql的一般步骤"></a>1.1优化sql的一般步骤</h2><h3 id="1-1-1通过show-status查看各种sql执行频率"><a href="#1-1-1通过show-status查看各种sql执行频率" class="headerlink" title="1.1.1通过show status查看各种sql执行频率"></a>1.1.1通过show status查看各种sql执行频率</h3><ul>
+<li>查看所有存储引擎的xxx语句执行次数：show status like “Com_%”  </li>
+<li>查看InnoDB存储引擎执行次数：show status like “InnoDB_%”  </li>
+<li>视图连接mysql服务器的次数：show status like “connnections”  </li>
+<li>服务器工作时间：show status like “Uptime”</li>
+<li>慢查询次数：show status like “Slow_queries”<h3 id="1-1-2定位执行效率较低的sql"><a href="#1-1-2定位执行效率较低的sql" class="headerlink" title="1.1.2定位执行效率较低的sql"></a>1.1.2定位执行效率较低的sql</h3></li>
+<li>方法一： 通过慢查询日志定位（查询结束才会记录）<br>用–log-slow-queries[=file_name]选项启动，mysqld写一个包含所有执行时间超过long_query_time秒的sql语句的 日志文件</li>
+<li>方法二：show processlist查看当前mysql的线程状态<h3 id="1-1-3通过explan分析低效sql的执行计划"><a href="#1-1-3通过explan分析低效sql的执行计划" class="headerlink" title="1.1.3通过explan分析低效sql的执行计划"></a>1.1.3通过explan分析低效sql的执行计划</h3></li>
+<li>查看执行计划：explain 查询sql
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/31/mysql优化/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/mongodb索引/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -887,163 +1052,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/16/java注解详解/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="无尴尬不青春">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/11.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="The man like the wind">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="The man like the wind" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/16/java注解详解/" itemprop="url">
-                  java注解详解
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-16T16:02:37+08:00">
-                2017-03-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/03/16/java注解详解/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/16/java注解详解/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="一、什么是注解"><a href="#一、什么是注解" class="headerlink" title="一、什么是注解"></a>一、什么是注解</h1><p>&emsp;&emsp;我们大家都知道Java代码中使用注释是为了向以后阅读这份代码的人解释说明一些事情，注解是注释的升级版，它可以向编译器、虚拟机等解释说明一些事情。比如我们非常熟悉的@Override就是一种元注解，它的作用是告诉编译器它所注解的方法是重写父类的方法，这样编译器就会去检查父类是否存在这个方法，以及这个方法的签名与父类是否相同。<br>&emsp;&emsp;也就是说，注解是描述Java代码的代码，它能够被编译器解析，注解处理工具在运行时也能够解析注解。我们在Java源文件中使用注释，是为了以后我们或他人再来读这段代码时，能够更好地理解它。Javadoc工具可以解析我们在源代码中为类、方法、变量等添加的描述信息，并根据这些描述信息自动生成一个HTML文档，这些自动生成的文档即可作为API帮助文档。只要我们为类、方法等添加的描述信息符合Javadoc要求的语法，我们就能够使用Javadoc工具根据我们的描述信息自动生成一个帮助文档。而注解比java注释和Javadoc要强大得多，它们三者之间的重大的区别在于，Java注释和Javadoc描述所发挥的作用仅仅到编译时就止步了，而注解直到运行时都能够发挥作用。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/03/16/java注解详解/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1093,7 +1101,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1102,7 +1110,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1111,7 +1119,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
