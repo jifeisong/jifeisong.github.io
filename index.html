@@ -526,7 +526,7 @@
       
         
           <h1 id="弹性分布式数据集RDDS"><a href="#弹性分布式数据集RDDS" class="headerlink" title="弹性分布式数据集RDDS"></a>弹性分布式数据集RDDS</h1><h2 id="并行集合"><a href="#并行集合" class="headerlink" title="并行集合"></a>并行集合</h2><p>程序中定义的集合可以通过调用  SparkContext 的 parallelize 方法来创建并行集合（rdd）。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">val data = Array(1, 2, 3, 4, 5)</div><div class="line">val distData = sc.parallelize(data)//自动分区</div><div class="line">//val distData = sc.parallelize(data,10)//手动分区</div></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> data = <span class="type">Array</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</div><div class="line"><span class="keyword">val</span> distData = sc.parallelize(data)<span class="comment">//自动分区</span></div><div class="line"><span class="comment">//val distData = sc.parallelize(data,10)//手动分区</span></div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/09/RDDS/#more" rel="contents">
