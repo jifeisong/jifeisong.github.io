@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="The man like the wind">
 <meta property="og:description" content="弹性分布式数据集RDDS并行集合程序中定义的集合可以通过调用  SparkContext 的 parallelize 方法来创建并行集合（rdd）。
 123val data = Array(1, 2, 3, 4, 5)val distData = sc.parallelize(data)//自动分区//val distData = sc.parallelize(data,10)//手动分区">
-<meta property="og:updated_time" content="2017-06-09T09:58:00.334Z">
+<meta property="og:updated_time" content="2017-06-09T10:01:17.124Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="spark-RDDS">
 <meta name="twitter:description" content="弹性分布式数据集RDDS并行集合程序中定义的集合可以通过调用  SparkContext 的 parallelize 方法来创建并行集合（rdd）。
@@ -499,7 +499,65 @@
 </tr>
 </tbody>
 </table>
-<h3 id="Actions-（动作）"><a href="#Actions-（动作）" class="headerlink" title="Actions （动作）"></a>Actions （动作）</h3><p>下面列出了一些 Spark 常用的 actions 操作。详细请参考 RDD API 文档 (Scala, Java, Python, R) 和 pair RDD 函数文档 (Scala, Java)。<br>action | 含义<br>—|—<br>reduce(func)| 使用函数 func 聚合数据集（dataset）中的元素，这个函数 func 输入为两个元素，返回为一个元素。这个函数应该是可交换（commutative）和关联（associative）的，这样才能保证它可以被并行地正确计算<br>collect() | 在驱动程序中，以一个数组的形式返回数据集的所有元素。这在返回足够小（sufficiently small）的数据子集的过滤器（filter）或其他操作（other operation）之后通常是有用的<br>count()|返回数据集中元素的个数<br>first()|返回数据集中的第一个元素（类似于take(1)）<br>take(n)|将数据集中的前 n 个元素作为一个数组返回<br>takeSample(withReplacement,num,[seed])|对一个数据集随机抽样，返回一个包含 num 个随机抽样（random sample）元素的数组，参数withReplacement指定是否有放回抽样，参数 seed 指定生成随机数的种子。<br>takeOrdered(n,[ordering])|返回RDD按自然顺序（natural order）或自定义比较器（customcomparator）排序后的前 n 个元素。<br>saveAsTextFile(path)|将数据集中的元素以文本文件（或文本文件集合）的形式写入本地文件系统、HDFS或其它 Hadoop 支持的文件系统中的给定目录中。Spark将对每个元素调用toString方法，将数据元素转换为文本文件中的一行记录。<br>saveAsSequenceFile(path) (Java and Scala) | 将数据集中的元素以 Hadoop SequenceFile 的形式写入到本地文件系统、HDFS 或其它 Hadoop支持的文件系统指定的路径中。该操作可以在实现了 Hadoop 的 Writable 接口的键值对（key-value pairs）的 RDD 上使用。在 Scala 中，它还可以隐式转换为 Writable 的类型（Spark 包括了基本类型的转换，例如 Int、Double、String 等等)。<br>saveAsObjectFile(path)(Java and Scala)|使用 Java 序列化（serialization）以简单的格式（simple format）编写数据集的元素，然后使用 SparkContext.objectFile() 进行加载。<br>countByKey()|仅适用于（K,V）类型的 RDD 。返回具有每个 key 的计数的 （K , Int）对 的 hashmap<br>foreach(func)|对数据集中每个元素运行函数func。这通常用于副作用（sideeffects），例如更新一个累加器（Accumulator）或与外部存储系统（external storage systems）进行交互。==注意：修改除foreach()之外的累加器以外的变量（variables）可能会导致未定义的行为（undefined behavior）。详细介绍请阅读理解闭包（Understanding closures） 部分。==</p>
+<h3 id="Actions-（动作）"><a href="#Actions-（动作）" class="headerlink" title="Actions （动作）"></a>Actions （动作）</h3><p>下面列出了一些 Spark 常用的 actions 操作。详细请参考 RDD API 文档 (Scala, Java, Python, R) 和 pair RDD 函数文档 (Scala, Java)。  </p>
+<table>
+<thead>
+<tr>
+<th>action</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reduce(func)</td>
+<td>使用函数 func 聚合数据集（dataset）中的元素，这个函数 func 输入为两个元素，返回为一个元素。这个函数应该是可交换（commutative）和关联（associative）的，这样才能保证它可以被并行地正确计算</td>
+</tr>
+<tr>
+<td>collect()</td>
+<td>在驱动程序中，以一个数组的形式返回数据集的所有元素。这在返回足够小（sufficiently small）的数据子集的过滤器（filter）或其他操作（other operation）之后通常是有用的</td>
+</tr>
+<tr>
+<td>count()</td>
+<td>返回数据集中元素的个数</td>
+</tr>
+<tr>
+<td>first()</td>
+<td>返回数据集中的第一个元素（类似于take(1)）</td>
+</tr>
+<tr>
+<td>take(n)</td>
+<td>将数据集中的前 n 个元素作为一个数组返回</td>
+</tr>
+<tr>
+<td>takeSample(withReplacement,num,[seed])</td>
+<td>对一个数据集随机抽样，返回一个包含 num 个随机抽样（random sample）元素的数组，参数withReplacement指定是否有放回抽样，参数 seed 指定生成随机数的种子。</td>
+</tr>
+<tr>
+<td>takeOrdered(n,[ordering])</td>
+<td>返回RDD按自然顺序（natural order）或自定义比较器（customcomparator）排序后的前 n 个元素。</td>
+</tr>
+<tr>
+<td>saveAsTextFile(path)</td>
+<td>将数据集中的元素以文本文件（或文本文件集合）的形式写入本地文件系统、HDFS或其它 Hadoop 支持的文件系统中的给定目录中。Spark将对每个元素调用toString方法，将数据元素转换为文本文件中的一行记录。</td>
+</tr>
+<tr>
+<td>saveAsSequenceFile(path) (Java and Scala)</td>
+<td>将数据集中的元素以 Hadoop SequenceFile 的形式写入到本地文件系统、HDFS 或其它 Hadoop支持的文件系统指定的路径中。该操作可以在实现了 Hadoop 的 Writable 接口的键值对（key-value pairs）的 RDD 上使用。在 Scala 中，它还可以隐式转换为 Writable 的类型（Spark 包括了基本类型的转换，例如 Int、Double、String 等等)。</td>
+</tr>
+<tr>
+<td>saveAsObjectFile(path)(Java and Scala)</td>
+<td>使用 Java 序列化（serialization）以简单的格式（simple format）编写数据集的元素，然后使用 SparkContext.objectFile() 进行加载。</td>
+</tr>
+<tr>
+<td>countByKey()</td>
+<td>仅适用于（K,V）类型的 RDD 。返回具有每个 key 的计数的 （K , Int）对 的 hashmap</td>
+</tr>
+<tr>
+<td>foreach(func)</td>
+<td>对数据集中每个元素运行函数func。这通常用于副作用（sideeffects），例如更新一个累加器（Accumulator）或与外部存储系统（external storage systems）进行交互。==注意：修改除foreach()之外的累加器以外的变量（variables）可能会导致未定义的行为（undefined behavior）。详细介绍请阅读理解闭包（Understanding closures） 部分。==</td>
+</tr>
+</tbody>
+</table>
 <h3 id="shuffle操作"><a href="#shuffle操作" class="headerlink" title="shuffle操作"></a>shuffle操作</h3><p>Spark 里的某些操作会触发 shuffle。shuffle 是spark 重新分配数据的一种机制，使得这些数据可以跨不同的区域进行分组。这通常涉及在 executors 和 机器之间拷贝数据，这使得 shuffle 成为一个复杂的、代价高的操作</p>
 <h4 id="后台"><a href="#后台" class="headerlink" title="后台"></a>后台</h4><p>为了明白 shuffle 操作的过程，我们以 reduceByKey 为例。reduceBykey 操作产生一个新的 RDD，其中 key 相同的所有的值组合成为一个 tuple - key 以及 与 key 相关联的所有值在 reduce 函数上的执行结果。但问题是，一个 key 的所有值不一定都在一个同一个分区里，甚至是不一定在同一台机器里，但是它们必须共同被计算。<br>在 spark 里，特定的操作需要数据不跨分区分布。在计算期间，一个任务在一个分区上执行，为了所有数据都在单个 reduceByKey 的 reduce 任务上运行，我们需要执行一个 all-to-all 操作。它必须从所有分区读取所有的 key 和 key对应的所有的值，并且跨分区聚集去计算每个 key 的结果 - 这个过程就叫做 shuffle。<br>尽管每个分区新 shuffle 的数据集将是确定的，分区本身的顺序也是这样，但是这些数据的顺序是不确定的。如果希望 shuffle 后的数据是有序的，可以使用 :  </p>
 <ul>
