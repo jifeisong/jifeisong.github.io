@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="jvm," />
+  <meta name="keywords" content="官方文档笔记," />
 
 
 
@@ -87,19 +87,16 @@
 
 
 
-<meta name="description" content="1运行时栈帧结构栈帧存储了方法的局部变量表，操作数栈，动态连接和方法返回地址等信息。编译时期确定栈帧所需内存大小。  
-1.1局部变量表局部变量表是一组变量值存储空间，用于 存放方法参数和方法内部定义的局部变量。">
+<meta name="description" content="通常情况下，一个传递给 Spark 操作（例如  map 或  reduce）的函数 func 是在远程的集群节点上执行的。该函数 func 在多个节点执行过程中使用的变量，是同一个变量的多个副本。这些变量的以副本的方式拷贝到每个机器上，并且各个远程机器上变量的更新并不会传播回 driver program（驱动程序）。通用且支持 read-write（读-写） 的共享变量在任务间是不能胜任的。所">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解java虚拟机-虚拟机字节码执行引擎">
-<meta property="og:url" content="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/index.html">
+<meta property="og:title" content="编程指南-共享变量">
+<meta property="og:url" content="http://yoursite.com/2017/06/09/编程指南-共享变量/index.html">
 <meta property="og:site_name" content="The man like the wind">
-<meta property="og:description" content="1运行时栈帧结构栈帧存储了方法的局部变量表，操作数栈，动态连接和方法返回地址等信息。编译时期确定栈帧所需内存大小。  
-1.1局部变量表局部变量表是一组变量值存储空间，用于 存放方法参数和方法内部定义的局部变量。">
-<meta property="og:updated_time" content="2017-03-06T07:19:27.706Z">
+<meta property="og:description" content="通常情况下，一个传递给 Spark 操作（例如  map 或  reduce）的函数 func 是在远程的集群节点上执行的。该函数 func 在多个节点执行过程中使用的变量，是同一个变量的多个副本。这些变量的以副本的方式拷贝到每个机器上，并且各个远程机器上变量的更新并不会传播回 driver program（驱动程序）。通用且支持 read-write（读-写） 的共享变量在任务间是不能胜任的。所">
+<meta property="og:updated_time" content="2017-06-09T09:45:45.615Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解java虚拟机-虚拟机字节码执行引擎">
-<meta name="twitter:description" content="1运行时栈帧结构栈帧存储了方法的局部变量表，操作数栈，动态连接和方法返回地址等信息。编译时期确定栈帧所需内存大小。  
-1.1局部变量表局部变量表是一组变量值存储空间，用于 存放方法参数和方法内部定义的局部变量。">
+<meta name="twitter:title" content="编程指南-共享变量">
+<meta name="twitter:description" content="通常情况下，一个传递给 Spark 操作（例如  map 或  reduce）的函数 func 是在远程的集群节点上执行的。该函数 func 在多个节点执行过程中使用的变量，是同一个变量的多个副本。这些变量的以副本的方式拷贝到每个机器上，并且各个远程机器上变量的更新并不会传播回 driver program（驱动程序）。通用且支持 read-write（读-写） 的共享变量在任务间是不能胜任的。所">
 
 
 
@@ -127,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/09/编程指南-共享变量/"/>
 
 
 
 
 
-  <title> 深入理解java虚拟机-虚拟机字节码执行引擎 | The man like the wind </title>
+  <title> 编程指南-共享变量 | The man like the wind </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -262,7 +259,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/09/编程指南-共享变量/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="无尴尬不青春">
@@ -286,7 +283,7 @@
             
             
               
-                深入理解java虚拟机-虚拟机字节码执行引擎
+                编程指南-共享变量
               
             
           </h1>
@@ -301,8 +298,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-06T15:18:44+08:00">
-                2017-03-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-09T17:45:05+08:00">
+                2017-06-09
               </time>
             
 
@@ -324,8 +321,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jvm/" itemprop="url" rel="index">
-                    <span itemprop="name">jvm</span>
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
                   </a>
                 </span>
 
@@ -342,8 +339,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/" itemprop="commentCount"></span>
+                <a href="/2017/06/09/编程指南-共享变量/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/09/编程指南-共享变量/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -369,14 +366,14 @@
       
 
       
-        <h1 id="1运行时栈帧结构"><a href="#1运行时栈帧结构" class="headerlink" title="1运行时栈帧结构"></a>1运行时栈帧结构</h1><p>栈帧存储了方法的局部变量表，操作数栈，动态连接和方法返回地址等信息。<br>编译时期确定栈帧所需内存大小。  </p>
-<h2 id="1-1局部变量表"><a href="#1-1局部变量表" class="headerlink" title="1.1局部变量表"></a>1.1局部变量表</h2><p>局部变量表是一组变量值存储空间，用于 存放方法参数和方法内部定义的局部变量。<br><a id="more"></a></p>
-<h2 id="1-2操作数栈"><a href="#1-2操作数栈" class="headerlink" title="1.2操作数栈"></a>1.2操作数栈</h2><p>用来存取方法执行过程的内容。例如算术运算通过操作数栈进行或者调用其他方法的时候通过操作数栈来进行参数传递。  </p>
-<h2 id="1-3动态连接"><a href="#1-3动态连接" class="headerlink" title="1.3动态连接"></a>1.3动态连接</h2><p>每个栈帧都包含一个只想运行时常量池中该栈帧所属方法的引用。</p>
-<h2 id="1-4方法返回地址"><a href="#1-4方法返回地址" class="headerlink" title="1.4方法返回地址"></a>1.4方法返回地址</h2><p>方法正常退出调用者的PC计数器的值可以作为返回地址，栈帧中和可能保存这个计数器值。异常退出返回地址是要通过异常处理器表确定，栈帧一般不会保存这部分信息</p>
-<h1 id="2方法调用"><a href="#2方法调用" class="headerlink" title="2方法调用"></a>2方法调用</h1><p>方法调用不等于方法执行，方法调用唯一的任务就是确定被调用方法的版本，暂时还不涉及方法内部的具体运行过程。</p>
-<h2 id="2-1解析"><a href="#2-1解析" class="headerlink" title="2.1解析"></a>2.1解析</h2><p>方法在程序真正运行之前就有确定的调用版本，并且运行期不可变，这类方法调用成为解析。这类方法主要有静态方法和私有方法。<br>解析调用是静态过程，编译期间确定，类装载的解析阶段就会把符号引用全部转为直接引用。  </p>
-<h2 id="2-2分派"><a href="#2-2分派" class="headerlink" title="2.2分派"></a>2.2分派</h2><p>Human man=new Man();// Human成为变量的静态类型，Man实际类型<br><strong>静态分配：</strong><br>所有依赖静态类型来定位方法执行版本的分派动作称为静态分配。静态分配和重载相关。<br><strong>动态分派：</strong><br>在运行期根据实际类型确定方法执行版本的分派过程成为动态分配。动态分配与重写相关。<br><strong>单分派与多分派：</strong><br>方法的接收者与方法的参数统称为方法宗量。<br>静态多分派，动态单分派</p>
+        <p>通常情况下，一个传递给 Spark 操作（例如  map 或  reduce）的函数 func 是在远程的集群节点上执行的。该函数 func 在多个节点执行过程中使用的变量，是同一个变量的多个副本。这些变量的以副本的方式拷贝到每个机器上，并且各个远程机器上变量的更新并不会传播回 driver program（驱动程序）。通用且支持 read-write（读-写） 的共享变量在任务间是不能胜任的。所以，Spark 提供了两种特定类型的共享变量 : broadcast variables（广播变量）和 accumulators（累加器）。<br><a id="more"></a></p>
+<h1 id="Broadcast-Variables-（广播变量）"><a href="#Broadcast-Variables-（广播变量）" class="headerlink" title="Broadcast Variables （广播变量）"></a>Broadcast Variables （广播变量）</h1><p>Broadcast variables（广播变量）允许程序员将一个 read-only（只读的）变量缓存到每台机器上，而不是给任务传递一个副本。它们是如何来使用呢，例如，广播变量可以用一种高效的方式给每个节点传递一份比较大的 input dataset（输入数据集）副本。在使用广播变量时，Spark 也尝试使用高效广播算法分发 broadcast variables（广播变量）以降低通信成本。<br>Spark 的 action（动作）操作是通过一系列的 stage（阶段）进行执行的，这些 stage（阶段）是通过分布式的 “shuffle” 操作进行拆分的。Spark 会自动广播出每个 stage（阶段）内任务所需要的公共数据。这种情况下广播的数据使用序列化的形式进行缓存，并在每个任务运行前进行反序列化。这也就意味着，只有在跨越多个 stage（阶段）的多个任务会使用相同的数据，或者在使用反序列化形式的数据特别重要的情况下，使用广播变量会有比较好的效果。<br>广播变量通过在一个变量  v 上调用 SparkContext.broadcast(v) 方法来进行创建。广播变量是 v 的一个 wrapper（包装器），可以通过调用 value 方法来访问它的值。代码示例如下 :</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> broadcastVar = sc.broadcast(<span class="type">Array</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>))</div><div class="line">broadcastVar: org.apache.spark.broadcast.<span class="type">Broadcast</span>[<span class="type">Array</span>[<span class="type">Int</span>]] = <span class="type">Broadcast</span>(<span class="number">0</span>)</div><div class="line">scala&gt; broadcastVar.value</div><div class="line">res0: <span class="type">Array</span>[<span class="type">Int</span>] = <span class="type">Array</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</div></pre></td></tr></table></figure>
+<p>在创建广播变量之后，在集群上执行的所有的函数中，应该使用该广播变量代替原来的 v 值，所以节点上的 v 最多分发一次。另外，对象 v 在广播后不应该再被修改，以保证分发到所有的节点上的广播变量具有同样的值（例如，如果以后该变量会被运到一个新的节点）。</p>
+<h1 id="Accumulators-（累加器）"><a href="#Accumulators-（累加器）" class="headerlink" title="Accumulators （累加器）"></a>Accumulators （累加器）</h1><p>Accumulators（累加器）是一个仅可以执行 “added”（添加）的变量来通过一个关联和交换操作，因此可以高效地执行支持并行。累加器可以用于实现 counter（ 计数，类似在 MapReduce 中那样）或者 sums（求和）。原生 Spark 支持数值型的累加器，并且程序员可以添加新的支持类型。<br>创建 accumulators（累加器）并命名之后，在 Spark 的 UI 界面上将会显示它。这样可以帮助理解正在运行的阶段的运行情况（注意 : 该特性在 Python 中还不支持）。<br>可以通过调用 SparkContext.longAccumulator() 或 SparkContext.doubleAccumulator() 方法创建数值类型的 accumulator（累加器）以分别累加 Long 或 Double 类型的值。集群上正在运行的任务就可以使用 add 方法来累计数值。然而，它们不能够读取它的值。只有 driver program（驱动程序）才可以使用 value 方法读取累加器的值。<br>下面的代码展示了一个 accumulator（累加器）被用于对一个数字中的元素求和。<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> accum = sc.longAccumulator(<span class="string">"My Accumulator"</span>)</div><div class="line">accum: org.apache.spark.util.<span class="type">LongAccumulator</span> = <span class="type">LongAccumulator</span>(id: <span class="number">0</span>, name: <span class="type">Some</span>(<span class="type">My</span> <span class="type">Accumulator</span>), value: <span class="number">0</span>)</div><div class="line"></div><div class="line">scala&gt; sc.parallelize(<span class="type">Array</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)).foreach(x =&gt; accum.add(x))</div><div class="line">...</div><div class="line"><span class="number">10</span>/<span class="number">09</span>/<span class="number">29</span> <span class="number">18</span>:<span class="number">41</span>:<span class="number">08</span> <span class="type">INFO</span> <span class="type">SparkContext</span>: <span class="type">Tasks</span> finished in <span class="number">0.317106</span> s</div><div class="line"></div><div class="line">scala&gt; accum.value</div><div class="line">res2: <span class="type">Long</span> = <span class="number">10</span></div></pre></td></tr></table></figure></p>
+<p>上面的代码示例使用的是 Spark 内置的 Long 类型的累加器，程序员可以通过继承 AccumulatorV2 类创建新的累加器类型。AccumulatorV2 抽象类有几个需要 override（重写）的方法 : reset 方法可将累加器重置为 0，add 方法可将其它值添加到累加器中，merge 方法可将其他同样类型的累加器合并为一个。其他需要重写的方法可参考 scala API 文档。 例如，假设我们有一个表示数学上 vectors（向量）的 MyVector 类，我们可以写成 :<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">VectorAccumulatorV2</span> <span class="keyword">extends</span> <span class="title">AccumulatorV2</span>[<span class="type">MyVector</span>, <span class="type">MyVector</span>] </span>&#123;</div><div class="line">  <span class="keyword">val</span> vec_ : <span class="type">MyVector</span> = <span class="type">MyVector</span>.createZeroVector</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">reset</span></span>(): <span class="type">MyVector</span> = &#123;</div><div class="line">    vec_.reset()</div><div class="line">  &#125;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">add</span></span>(v1: <span class="type">MyVector</span>, v2: <span class="type">MyVector</span>): <span class="type">MyVector</span> = &#123;</div><div class="line">    vec_.add(v2)</div><div class="line">  &#125;</div><div class="line">  ...</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Then, create an Accumulator of this type:</span></div><div class="line"><span class="keyword">val</span> myVectorAcc = <span class="keyword">new</span> <span class="type">VectorAccumulatorV2</span></div><div class="line"><span class="comment">// Then, register it into spark context:</span></div><div class="line">sc.register(myVectorAcc, <span class="string">"MyVectorAcc1"</span>)</div></pre></td></tr></table></figure></p>
+<p>注意，在开发者定义自己的  AccumulatorV2 类型时， resulting type（返回值类型）可能与添加的元素的类型不一致。<br>累加器的更新只发生在 action 操作中，Spark 保证每个任务只更新累加器一次，例如，重启任务不会更新值。在 transformations（转换）中， 用户需要注意的是，如果 task（任务）或 job stages（阶段）重新执行，每个任务的更新操作可能会执行多次。<br>累加器不会改变 Spark lazy evaluation（懒加载）的模式。如果累加器在 RDD 中的一个操作中进行更新，它们的值仅被更新一次，RDD 被作为 action 的一部分来计算。因此，在一个像 map() 这样的 transformation（转换）时，累加器的更新并没有执行。下面的代码片段证明了这个特性 :   </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> accum = sc.accumulator(<span class="number">0</span>)</div><div class="line">data.map &#123; x =&gt; accum += x; x &#125;</div><div class="line"><span class="comment">// 在这里，accus 仍然为 0, 因为没有 actions（动作）来让 map 操作被计算。</span></div></pre></td></tr></table></figure>
 
       
     </div>
@@ -421,7 +418,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/jvm/" rel="tag"># jvm</a>
+            <a href="/tags/官方文档笔记/" rel="tag"># 官方文档笔记</a>
           
         </div>
       
@@ -434,8 +431,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/06/深入理解java虚拟机-虚拟机类加载机制/" rel="next" title="深入理解java虚拟机-虚拟机类加载机制">
-                <i class="fa fa-chevron-left"></i> 深入理解java虚拟机-虚拟机类加载机制
+              <a href="/2017/06/09/RDDS/" rel="next" title="编程指南-RDDS">
+                <i class="fa fa-chevron-left"></i> 编程指南-RDDS
               </a>
             
           </div>
@@ -443,10 +440,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/15/hadoop源码研究（一）-概述/" rel="prev" title="hadoop源码研究（一）-概述">
-                hadoop源码研究（一）-概述 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -461,10 +454,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/"
-     data-title="深入理解java虚拟机-虚拟机字节码执行引擎"
+        <div class="ds-share flat" data-thread-key="2017/06/09/编程指南-共享变量/"
+     data-title="编程指南-共享变量"
      data-content=""
-     data-url="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/">
+     data-url="http://yoursite.com/2017/06/09/编程指南-共享变量/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -491,8 +484,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/"
-           data-title="深入理解java虚拟机-虚拟机字节码执行引擎" data-url="http://yoursite.com/2017/03/06/深入理解java虚拟机-虚拟机字节码执行引擎/">
+      <div class="ds-thread" data-thread-key="2017/06/09/编程指南-共享变量/"
+           data-title="编程指南-共享变量" data-url="http://yoursite.com/2017/06/09/编程指南-共享变量/">
       </div>
     
   </div>
@@ -632,7 +625,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1运行时栈帧结构"><span class="nav-number">1.</span> <span class="nav-text">1运行时栈帧结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1局部变量表"><span class="nav-number">1.1.</span> <span class="nav-text">1.1局部变量表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2操作数栈"><span class="nav-number">1.2.</span> <span class="nav-text">1.2操作数栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3动态连接"><span class="nav-number">1.3.</span> <span class="nav-text">1.3动态连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4方法返回地址"><span class="nav-number">1.4.</span> <span class="nav-text">1.4方法返回地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2方法调用"><span class="nav-number">2.</span> <span class="nav-text">2方法调用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1解析"><span class="nav-number">2.1.</span> <span class="nav-text">2.1解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2分派"><span class="nav-number">2.2.</span> <span class="nav-text">2.2分派</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Broadcast-Variables-（广播变量）"><span class="nav-number">1.</span> <span class="nav-text">Broadcast Variables （广播变量）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Accumulators-（累加器）"><span class="nav-number">2.</span> <span class="nav-text">Accumulators （累加器）</span></a></li></ol></div>
             
 
           </div>

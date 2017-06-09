@@ -1,0 +1,981 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="官方文档笔记," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="弹性分布式数据集RDDS并行集合程序中定义的集合可以通过调用  SparkContext 的 parallelize 方法来创建并行集合（rdd）。
+123val data = Array(1, 2, 3, 4, 5)val distData = sc.parallelize(data)//自动分区//val distData = sc.parallelize(data,10)//手动分区">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编程指南-RDDS">
+<meta property="og:url" content="http://yoursite.com/2017/06/09/RDDS/index.html">
+<meta property="og:site_name" content="The man like the wind">
+<meta property="og:description" content="弹性分布式数据集RDDS并行集合程序中定义的集合可以通过调用  SparkContext 的 parallelize 方法来创建并行集合（rdd）。
+123val data = Array(1, 2, 3, 4, 5)val distData = sc.parallelize(data)//自动分区//val distData = sc.parallelize(data,10)//手动分区">
+<meta property="og:updated_time" content="2017-06-09T09:45:48.682Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编程指南-RDDS">
+<meta name="twitter:description" content="弹性分布式数据集RDDS并行集合程序中定义的集合可以通过调用  SparkContext 的 parallelize 方法来创建并行集合（rdd）。
+123val data = Array(1, 2, 3, 4, 5)val distData = sc.parallelize(data)//自动分区//val distData = sc.parallelize(data,10)//手动分区">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6384944140601263000',
+      author: '博主大人'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/09/RDDS/"/>
+
+
+
+
+
+  <title> 编程指南-RDDS | The man like the wind </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">The man like the wind</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/09/RDDS/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="无尴尬不青春">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/11.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="The man like the wind">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="The man like the wind" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                编程指南-RDDS
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-09T17:41:45+08:00">
+                2017-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/09/RDDS/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/09/RDDS/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="弹性分布式数据集RDDS"><a href="#弹性分布式数据集RDDS" class="headerlink" title="弹性分布式数据集RDDS"></a>弹性分布式数据集RDDS</h1><h2 id="并行集合"><a href="#并行集合" class="headerlink" title="并行集合"></a>并行集合</h2><p>程序中定义的集合可以通过调用  SparkContext 的 parallelize 方法来创建并行集合（rdd）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">val data = Array(1, 2, 3, 4, 5)</div><div class="line">val distData = sc.parallelize(data)//自动分区</div><div class="line">//val distData = sc.parallelize(data,10)//手动分区</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="外部数据集"><a href="#外部数据集" class="headerlink" title="外部数据集"></a>外部数据集</h2><p>使用 Spark 来读取文件的一些注意事项：  </p>
+<ul>
+<li>如果使用本地文件系统的路径，所工作节点的相同访问路径下该文件必须可以访问。复制文件到所有工作节点上，或着使用共享的网络挂载文件系统。</li>
+<li>所有 Spark 中基于文件的输入方法，包括 textFile（文本文件），支持目录，压缩文件，或者通配符来操作。例如，您可以用 textFile(“/my/directory”)，textFile(“/my/directory/<em>.txt”) 和 textFile(“/my/directory/</em>.gz”)。</li>
+<li>textFile 方法也可以通过第二个可选的参数来控制该文件的分区数量。默认情况下，Spark 为文件的每一个 block（块）创建的一个分区（HDFS 中块大小默认是 128M），当然你也可以通过传递一个较大的值来要求一个较高的分区数量。请注意，分区的数量不能够小于块的数量。</li>
+</ul>
+<p>除了文本文件之外，Spark 的 Scala API 也支持一些其它的数据格式 :   </p>
+<ul>
+<li>SparkContext.wholeTextFiles 可以读取包含多个小文本文件的目录，并返回它们的每一个 (filename, content) 对。这与 textFile 形成对比，它的每一个文件中的每一行将返回一个记录。</li>
+<li>针对 SequenceFiles，使用 SparkContext 的 sequenceFile[K, V] 方法，其中 K 和 V 指的是它们在文件中的类型。这些应该是 Hadoop 中 Writable 接口的子类，例如 IntWritable 和 Text。此外，Spark 可以让您为一些常见的 Writables 指定原生类型。例如，sequenceFile[Int, String] 会自动读取 IntWritables 和 Texts 。</li>
+<li>针对其它的 Hadoop InputFormats，您可以使用 SparkContext.hadoopRDD 方法，它接受一个任意 JobConf 和 input format（输入格式）类，key 类和 value 类。通过相同的方法你可以设置你 Hadoop Job 的输入源。你还可以使用基于 “new” 的 MapReduce API（org.apache.hadoop.mapreduce）来使用 SparkContext.newAPIHadoopRDD 以设置 InputFormats。</li>
+<li>RDD.saveAsObjectFile 和 SparkContext.objectFile 支持使用简单的序列化的 Java Object 来保存 RDD。虽然这不像 Avro 这种专用的格式一样高效，但其提供了一种更简单的方式来保存任何的 RDD。</li>
+</ul>
+<h2 id="RDD操作"><a href="#RDD操作" class="headerlink" title="RDD操作"></a>RDD操作</h2><p>RDDS 支持两种类型的操作：</p>
+<ul>
+<li>transformations（转换，懒加载）：在一个已存在的 dataset 上创建一个新的 dataset</li>
+<li>actions（动作）: 将在 dataset 上运行的计算结果返回到驱动程序</li>
+</ul>
+<h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">val lines = sc.textFile(&quot;data.txt&quot;)</div><div class="line">val lineLengths = lines.map(s =&gt; s.length)</div><div class="line">val totalLength = lineLengths.reduce((a, b) =&gt; a + b)</div></pre></td></tr></table></figure>
+<p>第一行从外部文件中定义了一个基本的 RDD，但这个数据集并未加载到内存中或即将被行动 : line 仅仅是一个类似指针的东西，指向该文件。<br>第二行定义了 lineLengths 作为 map transformation 的结果。请注意，由于 laziness（延迟加载）lineLengths 不会被立即计算。<br>最后，我们运行 reduce，这是一个 action。在这此时，Spark 分发计算任务到不同的机器上运行，每台机器都运行在 map 的一部分并本地运行 reduce，仅仅返回它聚合后的结果给驱动程序。<br>如果我们也希望以后再次使用lineLengths，我们还可以添加：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lineLengths.persist()</div></pre></td></tr></table></figure>
+<p>==查看源码可知，sc.textFile(param) 中的 param 可以是以逗号分隔的字符串路径。如 “/user/data/123.txt,/user/data/1234.txt”！实际的生产开发中常用！========</p>
+<h3 id="传递函数给spark"><a href="#传递函数给spark" class="headerlink" title="传递函数给spark"></a>传递函数给spark</h3><p>当驱动程序在集群上运行时，Spark 的 API 在很大程度上依赖于传递函数。有2种推荐的方式来做到这一点 ：  </p>
+<ul>
+<li>匿名函数的语法 Anonymous function syntax，它可以用于短的代码片断</li>
+<li>在全局单例对象中的静态方法。例如，你可以定义对象 MyFunctions 然后传递 MyFunctions.func1，具体如下 :<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">object MyFunctions &#123;</div><div class="line">  def func1(s: String): String = &#123; ... &#125;</div><div class="line">&#125;</div><div class="line">myRdd.map(MyFunctions.func1)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="理解闭包"><a href="#理解闭包" class="headerlink" title="理解闭包"></a>理解闭包</h3><p>在集群中执行代码时，一个关于 Spark 更难的事情是理解变量和方法的范围和生命周期。同一代码在local或者cluster模式下执行可能会有不同的结果。下面示例出现的情况可能出现在其他的操作上。<br><em>示例：</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">var counter = 0</div><div class="line">var rdd = sc.parallelize(data)</div><div class="line">// Wrong: Don&apos;t do this!!</div><div class="line">rdd.foreach(x =&gt; counter += x)</div><div class="line">println(&quot;Counter value: &quot; + counter)</div></pre></td></tr></table></figure>
+<ul>
+<li>本地模式vs集群模式<br>上面的代码行为是不确定的，并且可能无法按预期正常工作。对于提交到集群执行的结果是0，因为counter并不是对集群全局可见的变量，每个excutor会有一个counter的副本，它不是driver node的counter了。本地模式下可能会得到正确的结果。<br>为了确保这些类型的场景明确的行为应该使用的 Accumulator（累加器）。当一个执行的任务分配到集群中的各个 worker 结点时，Spark 的累加器是专门提供安全更新变量的机制。<br>==在一般情况下，closures - constructs 像循环或本地定义的方法，不应该被用于改动一些全局状态。Spark 没有规定或保证突变的行为，以从封闭件的外侧引用的对象。一些代码，这可能以本地模式运行，但是这只是偶然和这样的代码如预期在分布式模式下不会表现。改用如果需要一些全局聚集累加器。==</li>
+<li>打印RDD元素<br>另一种常见的语法用于打印 RDD 的所有元素使用 rdd.foreach(println) 或 rdd.map(println)。在一台机器上，这将产生预期的输出和打印 RDD 的所有元素。然而，在集群 cluster 模式下，stdout 输出正在被执行写操作 executors 的 stdout 代替，而不是在一个驱动程序上，因此stdout 的 driver 程序不会显示这些！要打印 driver 程序的所有元素，可以使用的 collect() 方法首先把 RDD 放到 driver 程序节点上 : rdd.collect().foreach(println)。这可能会导致 driver 程序耗尽内存，虽说，因为 collect() 获取整个 RDD 到一台机器; 如果你只需要打印 RDD 的几个元素，一个更安全的方法是使用 take() : rdd.take(100).foreach(println)。<h3 id="使用key-value对工作"><a href="#使用key-value对工作" class="headerlink" title="使用key-value对工作"></a>使用key-value对工作</h3>虽然大多数 Spark 操作工作在包含任何类型对象的 RDDs 上，只有少数特殊的操作可用于 Key-Value 对的 RDDs。最常见的是分布式 “shuffle” 操作，如通过元素的 key 来进行 grouping 或 aggregating 操作。<br>在 Scala 中，这些操作时自动可用于包含 Tuple2 对象的 RDDs（在语言中内置的元组，通过简单的写 (a, b) ）。在 PairRDDFunctions 类中该 Key-Value 对的操作有效的，其中围绕元组的 RDD 自动包装。<br>例如，下面的代码使用的 Key-Value 对的 reduceByKey 操作统计文本文件中每一行出现了多少次 :  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">val lines = sc.textFile(&quot;data.txt&quot;)</div><div class="line">val pairs = lines.map(s =&gt; (s, 1))</div><div class="line">val counts = pairs.reduceByKey((a, b) =&gt; a + b)</div></pre></td></tr></table></figure>
+<p>我们也可以使用 counts.sortByKey() ，例如，在对按字母顺序排序，最后 counts.collect() 把他们作为一个数据对象返回给的驱动程序<br>==注意 : 使用自定义对象作为 Key-Value 对操作的 key 时，您必须确保自定义 equals() 方法有一个 hashCode() 方法相匹配。有关详情，请参见这是 Object.hashCode() documentation 中列出的约定==</p>
+<h3 id="Transformations-（转换）"><a href="#Transformations-（转换）" class="headerlink" title="Transformations （转换）"></a>Transformations （转换）</h3><p>下表列出了一些 Spark 常用的 transformations（转换）。详情请参考 RDD API 文档（Scala，Java，Python，R）和 pair RDD 函数文档（Scala，Java）。  </p>
+<table>
+<thead>
+<tr>
+<th>Transformations （转换）</th>
+<th>Meaning（含义）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>map(func)</td>
+<td>返回一个新的 distributed dataset（分布式数据集），它由 source（数据源）中的每个元素通过一个函数 func 来生成。</td>
+</tr>
+<tr>
+<td>filter(func)</td>
+<td>返回一个新的 distributed dataset（分布式数据集），它由 source（数据源）中的每个元素应用一个函数 func 且返回值为 true 的元素来生成。</td>
+</tr>
+<tr>
+<td>flatMap(func)</td>
+<td>与 map 类似，但是每一个输入的 item 可以被映射成 0 个或多个输出的 items（所以 func 应该返回一个 Seq 而不是一个单独的 item）</td>
+</tr>
+<tr>
+<td>mapPartitions(func)</td>
+<td>与 map 类似，但是单独的运行在在每个 RDD 的 partition（分区，block）上，所以在一个类型为 T 的 RDD 上运行时 func 必须是 Iterator<t> =&gt; Iterator<u></u></t></td>
+</tr>
+<tr>
+<td>mapPartitionsWithIndex(func)</td>
+<td>与 mapPartitions 类似，但是也需要提供一个代表 partition 的 index（索引）的 interger value（整型值）作为参数的 func，所以在一个类型为 T 的 RDD 上运行时 func 必须是 (Int, Iterator<t>) =&gt; Iterator<u> 类型。</u></t></td>
+</tr>
+<tr>
+<td>sample(withReplacement, fraction, seed)</td>
+<td>样本数据，设置是否放回（withReplacement）、采样的百分比（fraction）、使用指定的随机数生成器的种子（seed）。</td>
+</tr>
+<tr>
+<td>union(otherDataset)</td>
+<td>返回一个新的 dataset，它包含了 source dataset（源数据集）和 otherDataset（其它数据集）的并集。  </td>
+</tr>
+<tr>
+<td>intersection(otherDataset)</td>
+<td>返回一个新的 RDD，它包含了 source dataset（源数据集）和 otherDataset（其它数据集）的交集。</td>
+</tr>
+<tr>
+<td>distinct([numTasks]))</td>
+<td>返回一个新的 dataset，它包含了 source dataset（源数据集）中去重的元素。</td>
+</tr>
+<tr>
+<td>groupByKey([numTasks])</td>
+<td>在一个 (K, V) pair 的 dataset 上调用时，返回一个 (K, Iterable<v>) pairs 的 dataset。==注意 : 如果分组是为了在每一个 key 上执行聚合操作（例如，sum 或 average)，此时使用 reduceByKey 或 aggregateByKey 来计算性能会更好。注意 : 默认情况下，并行度取决于父 RDD 的分区数。可以传递一个可选的 numTasks 参数来设置不同的任务数。==</v></td>
+</tr>
+<tr>
+<td>reduceByKey(func, [numTasks])</td>
+<td>在一个 (K, V) pair 的 dataset 上调用时，返回一个 (K, Iterable<v>) pairs 的 dataset，它的值会针对每一个 key 使用指定的 reduce 函数 func 来聚合，它必须为 (V,V) =&gt; V 类型。像 groupByKey 一样，可通过第二个可选参数来配置 reduce 任务的数量。</v></td>
+</tr>
+<tr>
+<td>aggregateByKey(zeroValue)(seqOp, combOp, [numTasks])</td>
+<td>在一个 (K, V) pair 的 dataset 上调用时，返回一个 (K, Iterable<v>) pairs 的 dataset，它的值会针对每一个 key 使用指定的 combine 函数和一个中间的 “zero” 值来聚合，它必须为 (V,V) =&gt; V 类型。为了避免不必要的配置，可以使用一个不同与 input value 类型的 aggregated value 类型。</v></td>
+</tr>
+<tr>
+<td>sortByKey([ascending], [numTasks])</td>
+<td>在一个 (K, V) pair 的 dataset 上调用时，其中的 K 实现了 Ordered，返回一个按 keys 升序或降序的 (K, V) pairs 的 dataset。</td>
+</tr>
+<tr>
+<td>join(otherDataset, [numTasks])</td>
+<td>在一个 (K, V) 和 (K, W) 类型的 dataset 上调用时，返回一个 (K, (V, W)) pairs 的 dataset，它拥有每个 key 中所有的元素对。Outer joins 可以通过 leftOuterJoin，rightOuterJoin 和fullOuterJoin 来实现。</td>
+</tr>
+<tr>
+<td>cogroup(otherDataset, [numTasks])</td>
+<td>在一个 (K, V) 和的 dataset 上调用时，返回一个 (K, (Iterable<v>, Iterable<w>)) tuples 的 dataset。这个操作也调用了 groupWith。</w></v></td>
+</tr>
+<tr>
+<td>cartesian(otherDataset)</td>
+<td>在一个 T 和 U 类型的 dataset 上调用时，返回一个 (T, U) pairs 类型的 dataset（所有元素的 pairs，即笛卡尔积）。</td>
+</tr>
+<tr>
+<td>pipe(command, [envVars])</td>
+<td>通过使用 shell 命令来将每个 RDD 的分区给 Pipe。例如，一个 Perl 或 bash 脚本。RDD 的元素会被写入进程的标准输入（stdin），并且 lines（行）输出到它的标准输出（stdout）被作为一个字符串型 RDD 的 string 返回。</td>
+</tr>
+<tr>
+<td>coalesce(numPartitions)</td>
+<td>Decrease（降低）RDD 中 partitions（分区）的数量为 numPartitions。对于执行过滤后一个大的 dataset 操作是更有效的。</td>
+</tr>
+<tr>
+<td>repartition(numPartitions)</td>
+<td>Reshuffle（重新洗牌）RDD 中的数据以创建或者更多的 partitions（分区）并将每个分区中的数据尽量保持均匀。该操作总是通过网络来 shuffles 所有的数据。</td>
+</tr>
+<tr>
+<td>repartitionAndSortWithinPartitions(partitioner)</td>
+<td>根据给定的 partitioner（分区器）对 RDD 进行重新分区，并在每个结果分区中，按照 key 值对记录排序。这比每一个分区中先调用 repartition 然后再 sorting（排序）效率更高，因为它可以将排序过程推送到 shuffle 操作的机器上进行。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Actions-（动作）"><a href="#Actions-（动作）" class="headerlink" title="Actions （动作）"></a>Actions （动作）</h3><p>下面列出了一些 Spark 常用的 actions 操作。详细请参考 RDD API 文档 (Scala, Java, Python, R) 和 pair RDD 函数文档 (Scala, Java)。<br>action | 含义<br>—|—<br>reduce(func)| 使用函数 func 聚合数据集（dataset）中的元素，这个函数 func 输入为两个元素，返回为一个元素。这个函数应该是可交换（commutative ）和关联（associative）的，这样才能保证它可以被并行地正确计算<br>collect() | 在驱动程序中，以一个数组的形式返回数据集的所有元素。这在返回足够小（sufficiently small）的数据子集的过滤器（filter）或其他操作（other operation）之后通常是有用的<br>count()|返回数据集中元素的个数<br>first()|返回数据集中的第一个元素（类似于 take(1)）<br>take(n)|将数据集中的前 n 个元素作为一个数组返回<br>takeSample(withReplacement, num, [seed])|对一个数据集随机抽样，返回一个包含 num 个随机抽样（random sample）元素的数组，参数 withReplacement 指定是否有放回抽样，参数 seed 指定生成随机数的种子。<br>takeOrdered(n, [ordering])|返回 RDD 按自然顺序（natural order）或自定义比较器（custom comparator）排序后的前 n 个元素。<br>saveAsTextFile(path)|将数据集中的元素以文本文件（或文本文件集合）的形式写入本地文件系统、HDFS 或其它 Hadoop 支持的文件系统中的给定目录中。Spark 将对每个元素调用toString方法，将数据元素转换为文本文件中的一行记录。<br>saveAsSequenceFile(path) (Java and Scala) | 将数据集中的元素以 Hadoop SequenceFile 的形式写入到本地文件系统、HDFS 或其它 Hadoop支持的文件系统指定的路径中。该操作可以在实现了 Hadoop 的 Writable 接口的键值对（key-value pairs）的 RDD 上使用。在 Scala 中，它还可以隐式转换为 Writable 的类型（Spark 包括了基本类型的转换，例如 Int、Double、String 等等)。<br>saveAsObjectFile(path)(Java and Scala)|使用 Java 序列化（serialization）以简单的格式（simple format）编写数据集的元素，然后使用 SparkContext.objectFile() 进行加载。<br>countByKey()|仅适用于（K,V）类型的 RDD 。返回具有每个 key 的计数的 （K , Int）对 的 hashmap<br>foreach(func)|对数据集中每个元素运行函数 func 。这通常用于副作用（side effects），例如更新一个累加器（Accumulator）或与外部存储系统（external storage systems）进行交互。==注意：修改除 foreach() 之外的累加器以外的变量（variables）可能会导致未定义的行为（undefined behavior）。详细介绍请阅读 理解闭包（Understanding closures） 部分。==</p>
+<h3 id="shuffle操作"><a href="#shuffle操作" class="headerlink" title="shuffle操作"></a>shuffle操作</h3><p>Spark 里的某些操作会触发 shuffle。shuffle 是spark 重新分配数据的一种机制，使得这些数据可以跨不同的区域进行分组。这通常涉及在 executors 和 机器之间拷贝数据，这使得 shuffle 成为一个复杂的、代价高的操作</p>
+<h4 id="后台"><a href="#后台" class="headerlink" title="后台"></a>后台</h4><p>为了明白 shuffle 操作的过程，我们以 reduceByKey 为例。reduceBykey 操作产生一个新的 RDD，其中 key 相同的所有的值组合成为一个 tuple - key 以及 与 key 相关联的所有值在 reduce 函数上的执行结果。但问题是，一个 key 的所有值不一定都在一个同一个分区里，甚至是不一定在同一台机器里，但是它们必须共同被计算。<br>在 spark 里，特定的操作需要数据不跨分区分布。在计算期间，一个任务在一个分区上执行，为了所有数据都在单个 reduceByKey 的 reduce 任务上运行，我们需要执行一个 all-to-all 操作。它必须从所有分区读取所有的 key 和 key对应的所有的值，并且跨分区聚集去计算每个 key 的结果 - 这个过程就叫做 shuffle。<br>尽管每个分区新 shuffle 的数据集将是确定的，分区本身的顺序也是这样，但是这些数据的顺序是不确定的。如果希望 shuffle 后的数据是有序的，可以使用 :  </p>
+<ul>
+<li>mapPartitions 对每个分区进行排序，例如 .sorted。</li>
+<li>repartitionAndSortWithinPartitions 在分区的同时对分区进行高效的排序。</li>
+<li>sortBy 做一个整体的排序</li>
+</ul>
+<p>触发 shuffle 的操作包括 repartition 操作，如 repartition、coalesce；’ByKey’ 操作（除了 counting 相关操作），如 groupByKey、reduceByKey 和 join 操作，如 cogroup 和 join。</p>
+<h4 id="性能影响"><a href="#性能影响" class="headerlink" title="性能影响"></a>性能影响</h4><p>shuffle 是一个代价比较高的操作，它涉及磁盘 IO、数据序列化、网络 IO。为了准备 shuffle 操作的数据，Spark 启动了一系列的 map 任务和 reduce 任务，map 任务组织数据，reduce 完成数据的聚合。这里的 map、reduce 来自 MapReduce，跟 Spark 的 map 操作和 reduce 操作没有关系。<br>在内部，一个 map任务的所有结果数据会保存在内存，直到内存不能全部存储为止。然后，这些数据将基于目标分区进行排序并写入一个单独的文件中。在 reduce 时，任务将读取相关的已排序的数据块。<br>某些 shuffle 操作会大量消耗堆内存空间，因为shuffle 操作在数据转换前后，需要在使用内存中的数据结构对数据进行组织。需要特别说明的是，reduceByKey 和 aggregateByKey 在 map 时会创建这些数据结构，ByKey 操作在 reduce时创建这些数据结构。当内存满的时候，Spark 会把溢出的数据存到磁盘上，这将导致额外的磁盘 IO 开销和垃圾回收开销的增加。<br>shuffle 操作还会在磁盘上生成大量的中间文件。在 Spark 1.3 中，这些文件将会保留至对应的 RDD 不在使用并被垃圾回收为止。这么做的好处是，如果在 Spark 重新计算RDD的血统关系（lineage）时，shuffle 操作产生的这些中间文件不需要重新创建。如果 Spark 应用长期保持对RDD的引用，或者垃圾回收不频繁，这将导致垃圾回收的周期比较长。这意味着，长期运行Spark 任务可能会消耗大量的磁盘空间。临时数据存储路径可以通过 SparkContext 中设置参数 spark.local.dir 进行配置。<br>shuffle 操作的行为可以通过调节多个参数进行设置。详细的说明请看 配置页面 中的 “Shuffle 行为” 部分。</p>
+<h3 id="RDD持久化"><a href="#RDD持久化" class="headerlink" title="RDD持久化"></a>RDD持久化</h3><p>存储级别通过传递一个 StorageLevel 对象（Scala、Java、Python）给 persist() 方法进行设置。cache() 方法是使用默认存储级别的快捷设置方法，默认的存储级别是 StorageLevel.MEMORY_ONLY（将反序列化的对象存储到内存中）。详细的存储级别介绍如下 :</p>
+<ul>
+<li>MEMORY_ONLY:将RDD以反序列化Java对象的形式存储在JVM中。如果内存空间不够，部分数据分区将不再缓存，在每次需要用到这些数据时重新进行计算。这是默认的级别。</li>
+<li>MEMORY_AND_DISK : 将 RDD 以反序列化 Java 对象的形式存储在 JVM 中。如果内存空间不够，将未缓存的数据分区存储到磁盘，在需要使用这些分区时从磁盘读取。</li>
+<li>MEMORY_ONLY_SER : 将 RDD 以序列化的 Java 对象的形式进行存储（每个分区为一个 byte 数组）。这种方式会比反序列化对象的方式节省很多空间，尤其是在使用 fast serializer时会节省更多的空间，但是在读取时会增加 CPU 的计算负担。</li>
+<li>MEMORY_AND_DISK_SER : 类似于 MEMORY_ONLY_SER ，但是溢出的分区会存储到磁盘，而不是在用到它们时重新计算。</li>
+<li>DISK_ONLY : 只在磁盘上缓存 RDD。</li>
+<li>MEMORY_ONLY_2，MEMORY_AND_DISK_2，等等 : 与上面的级别功能相同，只不过每个分区在集群中两个节点上建立副本。</li>
+<li>OFF_HEAP（实验中）: 类似于 MEMORY_ONLY_SER ，但是将数据存储在 off-heap memory，这需要启动 off-heap 内存。</li>
+</ul>
+<p><strong>如何选择存储级别：</strong><br>Spark 的存储级别的选择，核心问题是在内存使用率和 CPU 效率之间进行权衡。建议按下面的过程进行存储级别的选择 :</p>
+<ul>
+<li>如果使用默认的存储级别（MEMORY_ONLY），存储在内存中的 RDD 没有发生溢出，那么就选择默认的存储级别。默认存储级别可以最大程度的提高 CPU 的效率,可以使在 RDD 上的操作以最快的速度运行。</li>
+<li>如果内存不能全部存储 RDD，那么使用 MEMORY_ONLY_SER，并挑选一个快速序列化库将对象序列化，以节省内存空间。使用这种存储级别，计算速度仍然很快</li>
+<li>除了在计算该数据集的代价特别高，或者在需要过滤大量数据的情况下，尽量不要将溢出的数据存储到磁盘。因为，重新计算这个数据分区的耗时与从磁盘读取这些数据的耗时差不多</li>
+<li>如果想快速还原故障，建议使用多副本存储级别（例如，使用 Spark 作为 web 应用的后台服务，在服务出故障时需要快速恢复的场景下）。所有的存储级别都通过重新计算丢失的数据的方式，提供了完全容错机制。但是多副本级别在发生数据丢失时，不需要重新计算对应的数据库，可以让任务继续运行。</li>
+</ul>
+<p><strong>删除数据：</strong><br>Spark 自动监控各个节点上的缓存使用率，并以最近最少使用的方式（LRU）将旧数据块移除内存。如果想手动移除一个 RDD，而不是等待该 RDD 被 Spark 自动移除，可以使用 RDD.unpersist() 方法。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/weixindashang.png" alt="无尴尬不青春 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/zhifubaodashang.png" alt="无尴尬不青春 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/官方文档笔记/" rel="tag"># 官方文档笔记</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/31/mysql优化/" rel="next" title="mysql优化">
+                <i class="fa fa-chevron-left"></i> mysql优化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/09/编程指南-共享变量/" rel="prev" title="编程指南-共享变量">
+                编程指南-共享变量 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/06/09/RDDS/"
+     data-title="编程指南-RDDS"
+     data-content=""
+     data-url="http://yoursite.com/2017/06/09/RDDS/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/06/09/RDDS/"
+           data-title="编程指南-RDDS" data-url="http://yoursite.com/2017/06/09/RDDS/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/11.png"
+               alt="无尴尬不青春" />
+          <p class="site-author-name" itemprop="name">无尴尬不青春</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/songjifei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/songjifei" target="_blank" title="csdn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://rainyinseptember.github.io/" title="生命不息折腾不止" target="_blank">生命不息折腾不止</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tigerinme.github.io/" title="琚兄" target="_blank">琚兄</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=0 height=0 src="//music.163.com/outchain/player?type=2&id=29460504&auto=1&height=66"></iframe>
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#弹性分布式数据集RDDS"><span class="nav-number">1.</span> <span class="nav-text">弹性分布式数据集RDDS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#并行集合"><span class="nav-number">1.1.</span> <span class="nav-text">并行集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外部数据集"><span class="nav-number">1.2.</span> <span class="nav-text">外部数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDD操作"><span class="nav-number">1.3.</span> <span class="nav-text">RDD操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础"><span class="nav-number">1.3.1.</span> <span class="nav-text">基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传递函数给spark"><span class="nav-number">1.3.2.</span> <span class="nav-text">传递函数给spark</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#理解闭包"><span class="nav-number">1.3.3.</span> <span class="nav-text">理解闭包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用key-value对工作"><span class="nav-number">1.3.4.</span> <span class="nav-text">使用key-value对工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transformations-（转换）"><span class="nav-number">1.3.5.</span> <span class="nav-text">Transformations （转换）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Actions-（动作）"><span class="nav-number">1.3.6.</span> <span class="nav-text">Actions （动作）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shuffle操作"><span class="nav-number">1.3.7.</span> <span class="nav-text">shuffle操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#后台"><span class="nav-number">1.3.7.1.</span> <span class="nav-text">后台</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#性能影响"><span class="nav-number">1.3.7.2.</span> <span class="nav-text">性能影响</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDD持久化"><span class="nav-number">1.3.8.</span> <span class="nav-text">RDD持久化</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">无尴尬不青春</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jifei"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
