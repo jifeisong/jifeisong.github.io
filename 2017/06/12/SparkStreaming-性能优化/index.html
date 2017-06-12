@@ -1,0 +1,860 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark学习笔记," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="为了在集群中获得 Spark Streaming 应用程序的最佳性能需要一些优化。这部分解释了一部分能够调整用来提升您应用程序性能的参数和配置。在一个较高的水平上，您需要考虑两件事情 :
+
+通过有效的利用群集资源来减少每批数据的处理时间。
+设置正确的 Batch 大小，这样的话当它们被接受时 Batch 数据能够被尽量快的处理（换言之，数据处理能够赶得上数据获取速度）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SparkStreamin-性能优化">
+<meta property="og:url" content="http://yoursite.com/2017/06/12/SparkStreaming-性能优化/index.html">
+<meta property="og:site_name" content="The man like the wind">
+<meta property="og:description" content="为了在集群中获得 Spark Streaming 应用程序的最佳性能需要一些优化。这部分解释了一部分能够调整用来提升您应用程序性能的参数和配置。在一个较高的水平上，您需要考虑两件事情 :
+
+通过有效的利用群集资源来减少每批数据的处理时间。
+设置正确的 Batch 大小，这样的话当它们被接受时 Batch 数据能够被尽量快的处理（换言之，数据处理能够赶得上数据获取速度）。">
+<meta property="og:updated_time" content="2017-06-12T10:00:03.925Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SparkStreamin-性能优化">
+<meta name="twitter:description" content="为了在集群中获得 Spark Streaming 应用程序的最佳性能需要一些优化。这部分解释了一部分能够调整用来提升您应用程序性能的参数和配置。在一个较高的水平上，您需要考虑两件事情 :
+
+通过有效的利用群集资源来减少每批数据的处理时间。
+设置正确的 Batch 大小，这样的话当它们被接受时 Batch 数据能够被尽量快的处理（换言之，数据处理能够赶得上数据获取速度）。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6384944140601263000',
+      author: '博主大人'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/12/SparkStreaming-性能优化/"/>
+
+
+
+
+
+  <title> SparkStreamin-性能优化 | The man like the wind </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">The man like the wind</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/12/SparkStreaming-性能优化/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="无尴尬不青春">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/11.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="The man like the wind">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="The man like the wind" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SparkStreamin-性能优化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-12T17:59:05+08:00">
+                2017-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/12/SparkStreaming-性能优化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/12/SparkStreaming-性能优化/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>为了在集群中获得 Spark Streaming 应用程序的最佳性能需要一些优化。这部分解释了一部分能够调整用来提升您应用程序性能的参数和配置。在一个较高的水平上，您需要考虑两件事情 :</p>
+<ul>
+<li>通过有效的利用群集资源来减少每批数据的处理时间。</li>
+<li>设置正确的 Batch 大小，这样的话当它们被接受时 Batch 数据能够被尽量快的处理（换言之，数据处理能够赶得上数据获取速度）。<a id="more"></a>
+<h1 id="降低批处理的时间"><a href="#降低批处理的时间" class="headerlink" title="降低批处理的时间"></a>降低批处理的时间</h1><h2 id="数据接收的并行级别"><a href="#数据接收的并行级别" class="headerlink" title="数据接收的并行级别"></a>数据接收的并行级别</h2>通过网络（像 Kafka，Flume，socket，等等）接受数据需要数据反序列化然后存在 Spark 中。如果数据接收成为了系统中的瓶颈，则需要考虑并行的数据接收。注意，每个 Input DStream（输入流）创建一个接受单个数据流的单独的 Receiver（接收器）（运行在一个 Worker 机器上）。接受多个数据流因此可以通过创建多个 Input DStreams 以及配置他们去从数据源（S）的不同分区接收数据流来实现。例如，一个单一的 Kafka Input DStream 接收两个 Topic（主题） 的数据能够被拆分成两个 Kafka 输入流，每个仅接收一个 Topic。这将运行两个 Receiver（接收器），使得数据可以被并行接受，因此将提高整体吞吐量。这些多个 DStream 可以合并在一起以创建一个单独的 DStream。然后被用于在一个单独的 Input DStream 上的 Transformations（转换）可以在统一的流上被应用。按照以下步骤进行 :</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> numStreams = <span class="number">5</span></div><div class="line"><span class="keyword">val</span> kafkaStreams = (<span class="number">1</span> to numStreams).map &#123; i =&gt; <span class="type">KafkaUtils</span>.createStream(...) &#125;</div><div class="line"><span class="keyword">val</span> unifiedStream = streamingContext.union(kafkaStreams)</div><div class="line">unifiedStream.print()</div></pre></td></tr></table></figure>
+<p>应当考虑的另一个参数是 Receiver（接收器）的阻塞间隔，它通 过配置参数 spark.streaming.blockInterval 来决定。对于大部分 Receiver（接收器） 来说，在存储到 Spark 的 Memory（内存）之前时接收的数据被合并成数据 Block（块）。每批 Block（块）的数量确定了将用于处理在一个类似 Map Transformation（转换）的接收数据的任务数量。每个 Receiver（接收器）的每个 Batch 的任务数量大约为（Batch 间隔 / Block 间隔）。例如，200ms 的 Block（块）间隔和每 2s 的 Batch 将创建 10 个任务。如果任务的数量过低（即，小于每台机器的 Core（CPU）数量），那么效率会很低，因为所有可用的 Core（CPU）将不会用来处理数据。以增加给定的 Batch 间隔的任务数量，降低该 Block（间隔）。然而，Block（块）间隔推荐的最低值约为 50ms，低于该推荐值的任务的运行开销可能是一个问题。<br>与多个 Input Streams / Receivers 接受数据的另一种方法是明确的 Repartition （重分区）输入的数据流（使用 inputStream.repartition（<partition（分区）的数量>））。这样在进一步处理之前就分发接收数据的 Batch 到群集中指定数量的机器上去。</partition（分区）的数量></p>
+<h2 id="数据处理的并行级别"><a href="#数据处理的并行级别" class="headerlink" title="数据处理的并行级别"></a>数据处理的并行级别</h2><p>集群资源的利用率可能会很低，如果在任何计算阶段中并行任务数量的不是很多的话。例如，对于像 reduceByKey 和 reduceByKeyAndWindow 这样的分布式 Reduce 操作来说，默认的并行任务数量由 spark.default.parallelism 配置属性 控制。您可以传递并行的的参数（请看 PairDStreamFunctions 文档），或者设置 spark.default.parallelism 配置属性 来改变默认值。</p>
+<h2 id="数据序列化"><a href="#数据序列化" class="headerlink" title="数据序列化"></a>数据序列化</h2><p>可以通过调整序列化的格式来减少数据序列化的开销。在流式传输的情况下，有两种数据类型会被序列化。</p>
+<ul>
+<li>Input Data（输入的数据）: 默认情况下，通过 Receivers（接收器）接收的输入数据被存储在 Executor 的内存与 StorageLevel.MEMORY_AND_DISK_SER_2 中。也就是说，数据被序列化成 Bytes（字节）以降低 GC 开销，以及被复制用于 Executor 的失败容错。此外，数据首先保存在 Memory（内存）中，如果内存不足已容纳所有用于流计算的输入数据将被溢出到硬盘上。这个序列化操作显然也需要开销 - Receiver（接收器）必须反序列化接收到的数据并且使用 Spark 的序列化格式重新序列化它们。</li>
+<li>通过 Streaming 操作产生的持久的 RDDs : 通过流计算产生的 RDDs 可能被持久化在内存中。例如，Window（窗口）操作将数据持久化在内存中，因为他们可能被多次处理。然而，不像 Spark Core 默认的 StorageLevel.MEMORY_ONLY，通过流计产生的持久化 RDDs 被使用 StorageLevel.MEMORY_ONLY_SER（也就是序列化）存储，默认 GC 开销降至最低。</li>
+</ul>
+<p>在这两种情况下，使用 Kryo 序列化能够减少 CPU 和 内存的开销。更多细节请看 Spark 优化指南。对于 Kyro 来说，考虑注册自定义的 Class，并且禁用 Object（对象）引用跟踪（在 配置指南 中看 Kyro 相关的配置）。<br>在特定的情况下，需要用于保留 Streaming 应用程序的数据量不是很大，这样也许是可行的，来保存反序列化的数据（两种类型）不用引起过度的 GC 开销。例如，如果您使用 Batch 的间隔有几秒钟并且没有 Window（窗口）操作，然后你可以通过显式地设置存储相应的级别来尝试禁用序列化保存数据。这将减少由于序列化的 CPU 开销，可能不需要太多的 GC 开销就能提升性能。</p>
+<h2 id="任务启动开销"><a href="#任务启动开销" class="headerlink" title="任务启动开销"></a>任务启动开销</h2><p>如果每秒任务启动的数据很高（比如，每秒 50 个任务或者更多），那么发送 Task（任务） 到 Slave 的负载可能很大，将很难实现 亚秒级 延迟。可以通过下面的改变来降低负载 :<br>Execution Mode（运行模式）: 以 Standlone 模式或者 coarse-grained（粗粒度的）Mesos 模式运行 Spark 会比 fine-grained（细粒度的）Mesos 模式运行 Spark 获得更佳的任务启动时间。更详细的信息请参考 Mesos 运行指南</p>
+<h1 id="设置合理的批处理时间"><a href="#设置合理的批处理时间" class="headerlink" title="设置合理的批处理时间"></a>设置合理的批处理时间</h1><p>对于群集上运行的 Spark Streaming 应用程序来说应该是稳定的，数据处理速度应该至少等于数据产生速度。对于应用程序来说无论这个是不是真的都可以通过在 Streaming Web UI 找到 监控 的处理时间，批处理时间应该小于批间隔。<br>取决于流计算的性质，所用的批间隔可能在通过群集中一组固定资源上的应用程序持续的数据速率有显著的影响。例如，让我们考虑下更早的 WordCountNetwork 例子。对于一个特定的数据速率。系统可能能够保持每 2 秒报告一次单词统计（即，批间隔是 2 秒），而不是每 500 毫秒一次。因此批间隔需要被设置，使得线上的预期数据速率可持续。<br>要为您的应用程序找出一个合理的批大小是去使用一个保守的批间隔（例如，5~10 秒）和一个较低的数据速率来测试它。为了验证系统是否能够保持数据速率，您可以通过每个被处理的 Batch 来检查端到端的延迟情况（或者在 Spark Driver log4j 日志中看 “Total delay”，或者使用 StreamingListener 接口）。如果延迟与批大小相比较处于一个稳定的状态，那么系统是稳定的。否则，如果延迟继续增加，它意味着系统不能保持下去，因此它是不稳定的。一旦你有了一个稳定的配置，你可以去试着增加数据速率 和/或者  降低批大小。注意一个短暂的延迟增加是由于临时的数据速率增加可能会变好，只要延迟降低到一个比较低的值。（即，小于批大小）。</p>
+<h1 id="内存优化"><a href="#内存优化" class="headerlink" title="内存优化"></a>内存优化</h1><p>调优 Spark 应用程序的内存使用情况和 GC 行为已经在 优化指南 中详细讨论了。强烈推荐您阅读它。在这一章，我们讨论在 Spark Streaming 应用程序 Context 中指定的一些优化参数。<br>Spark Streaming 应用程序在群集中需要的 Memory（内存） 数量取决于使用的 Transformations（转换）上的类型行为。例如，如果您想要在最近 10 分钟的时候上使用 Window（窗口）函数，那么您的群集应有有足够的 Memory 以保存 10 分钟值的数据在内存中。或者您想要在大量的 keys 中使用 updateStateByKey，那么所需要的内存将会更高。与之相反，如果您想要去做一个简单的 map-filter-store 操作，那么所需的内存将会更少。<br>在一般情况下，从数据通过 Receiver（接收器）被接收时起使用 StorageLevel.MEMORY_AND_DISK_SER_2 存储，数据在内存中放不下时将拆分到硬盘中去。这样也许降低了 Streaming 应用程序的性能，因此建议为您的 Streaming 应用程序提供足够的内存。它最好去试一试，并且在小范围看看 Memory（内存）使用情况然后估算相应的值。<br>内存调优的另一个方面是垃圾收集。Streaming 应用程序需要低延迟，JVM 垃圾回收造成的大量暂停是不可取的。<br>这里有一些能够帮助你调整内存使用情况以及 GC 开销的参数 :   </p>
+<ul>
+<li>Persistence Level of DStreams（DStream 的持久化级别）: 像前面所提到的 数据序列化 部分，输入的数据和 RDDs 默认持久化为序列化的字节。和反序列化持久性相比，这样减少了内存使用和 GC 开销。启用 Kryo 序列化进一步减少了序列化大小和内存使用。进一步减少内存使用可以用压缩实现（请看 Spark 配置 spark.rdd.compress），付出的是 CPU 时间。</li>
+<li>Clearing old data（清除旧数据）: 默认情况下，所有的输入数据和通过 DStream transformation（转换）产生的持久化 RDDs 将被自动的清除。Spark Streaming 决定何时清除基于使用 transformation（转换）的数据。例如，如果你使用一个 10 分钟的 Window（窗口）操作，那么 Spark Streaming 将保存最近 10 分钟的数据，并主动扔掉旧的数据。数据也能够通过设置 streamingContext.remeber 保持更久（例如，交互式查询旧数据）。</li>
+<li>CMS Garbage Collector（CMS 垃圾回收器）: 使用并发的 mark-sweep GC 是强烈推荐的用于保持 GC 相关的暂停更低。即使知道并发的 GC 降低了整个系统处理的吞吐量。仍然建议使用，以获得更一致的批处理时间。确定你在 Driver（在 spark-submit 中使用 –driver-java-options）和 Executor（使用 Spark 配置 spark.executor.extraJavaOptions）上设置的 CMS GC。</li>
+<li>Other tips（其它建议）: 为了进一步降低 GC 开销，这里有些更多的建议可以尝试。<br>持久化 RDDs 使用 OFF_HEAP 存储界别。更多详情请看 Spark 编程指南<br>使用更多的 Executor 和更小的 heap size（堆大小）。这将在每个 JVM heap 内降低 GC 压力。</li>
+</ul>
+<p>应该记住的要点：</p>
+<ul>
+<li>一个 DStream 和一个单独的 Receiver（接收器）关联。为了达到并行的读取多个 Receiver（接收器）。例如，多个 DStreams 需要被创建。一个 Receiver 运行在一个 Executor 内。它占有一个 Core（CPU）。确保在 Receiver Slot 被预定后有足够的 Core 。例如，spark.cores.max 应该考虑 Receiver Slot。Receiver 以循环的方式被分配到 Executor。</li>
+<li>当数据从一个 Stream 源被接收时，Receiver（接收器） 创建了数据块。每个块间隔的毫秒内产生一个新的数据块。N 个数据块在批间隔（N = 批间隔 / 块间隔）的时候被创建。这些 Block（块）通过当前的 Executor 的 BlockManager 发布到其它 Executor 的 BlockManager。在那之后，运行在 Driver 上的  Network Input Tracker 获取 Block 位置用于进一步处理。</li>
+<li>当数据从一个 Stream 源被接收时，Receiver（接收器） 创建了数据块。每个块间隔的毫秒内产生一个新的数据块。N 个数据块在批间隔（N = 批间隔 / 块间隔）的时候被创建。这些 Block（块）通过当前的 Executor 的 BlockManager 发布到其它 Executor 的 BlockManager。在那之后，运行在 Driver 上的  Network Input Tracker 获取 Block 位置用于进一步处理。</li>
+<li>在driver上为批间隔生成的blocks创建一个RDD。 在 batchInterval生成的Blocks是 RDD 的分区。每个分区是 Spark 中的一个任务。blockInterval == batchInterval 将意味着那是一个单独的分区被创建并且可能它在本地被处理过。</li>
+<li>除非非本地计划启动，否则blocks中的map tasks将在executors（接收block和保留副本的executor）中进行处理，而不管块间隔如何。更大的块间隔意味着更大的块。 spark.locality.wait高的值 增加在本地节点上处理 Blcok 的机会。需要在这两个参数之间找到平衡，以确保在本地处理较大的块。。</li>
+<li>您可以通过调用inputDstream.repartition（n）来定义分区数，而不是依赖于batchInterval和blockInterval。 这样可以随机重新组合RDD中的数据，创建n个分区。 是的，为了更大的并行性。 虽然带来了shuffle的代价。 RDD的处理由driver的jobscheduler作为一个job调度。 在给定的时间点，只有一个job是active的。 因此，如果一个job正在执行，则其他jobs将排队。</li>
+<li>如果你有两个 DStream，那将有两个 RDDs 形成并且将有两个 Job 被创建，他们将被一个一个的调度。为了避免这个，你可以合并两个 DStream。这将确保两个 RDD 的 DStream 形成一个单独的 unionRDD。这个 unionRDD 被作为一个单独的 Job 考虑。然而分区的 RDDs 不受影响。</li>
+<li>如果批处理时间超过了批间隔，那么显然 Receiver（接收器）的内存将开始填满，最终将抛出异常（最可能的是 BlockNotFoundException）。当前没有方法去暂停 Receiver。使用 SparkConf 配置  spark.streaming.receiver.maxRate，Receiver（接收器）的速率可以被限制。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/weixindashang.png" alt="无尴尬不青春 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/zhifubaodashang.png" alt="无尴尬不青春 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark学习笔记/" rel="tag"># spark学习笔记</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/12/SparkStreaming-核心内容/" rel="next" title="SparkStreaming-核心内容">
+                <i class="fa fa-chevron-left"></i> SparkStreaming-核心内容
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/06/12/SparkStreaming-性能优化/"
+     data-title="SparkStreamin-性能优化"
+     data-content=""
+     data-url="http://yoursite.com/2017/06/12/SparkStreaming-性能优化/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/06/12/SparkStreaming-性能优化/"
+           data-title="SparkStreamin-性能优化" data-url="http://yoursite.com/2017/06/12/SparkStreaming-性能优化/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/11.png"
+               alt="无尴尬不青春" />
+          <p class="site-author-name" itemprop="name">无尴尬不青春</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/songjifei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/songjifei" target="_blank" title="csdn">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  csdn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://rainyinseptember.github.io/" title="生命不息折腾不止" target="_blank">生命不息折腾不止</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://tigerinme.github.io/" title="琚兄" target="_blank">琚兄</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=0 height=0 src="//music.163.com/outchain/player?type=2&id=29460504&auto=1&height=66"></iframe>
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#降低批处理的时间"><span class="nav-number">1.</span> <span class="nav-text">降低批处理的时间</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据接收的并行级别"><span class="nav-number">1.1.</span> <span class="nav-text">数据接收的并行级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据处理的并行级别"><span class="nav-number">1.2.</span> <span class="nav-text">数据处理的并行级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据序列化"><span class="nav-number">1.3.</span> <span class="nav-text">数据序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#任务启动开销"><span class="nav-number">1.4.</span> <span class="nav-text">任务启动开销</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置合理的批处理时间"><span class="nav-number">2.</span> <span class="nav-text">设置合理的批处理时间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存优化"><span class="nav-number">3.</span> <span class="nav-text">内存优化</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">无尴尬不青春</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jifei"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+</body>
+</html>
