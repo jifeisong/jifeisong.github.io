@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hadoop," />
+  <meta name="keywords" content="spark学习笔记," />
 
 
 
@@ -87,16 +87,28 @@
 
 
 
-<meta name="description" content="&amp;emsp;&amp;emsp;经过一周时间的学习对mapreduce开发最相关的几个流程的源码进行了分析。主要是通过大神的博客的指导来学习，但这期间还是有些吃力。hadoop这样一个庞大的工程，要是没有博客指导，都不知道从何下手。参考的博客主要是对旧版本mapreduce进行分析，我同时对新版本的源码也相应的进行了学习，新旧版本改动差距还是很大，项目结构和源码都有不小的改变。不管怎样收获还是很大，不仅对">
+<meta name="description" content="背景为了理解 Spark Streaming 提供的语义，让我们记住 Spark RDDs 最基本的容错语义。
+
+RDD 是不可变的，确定性的可重新计算的分布式的 DataSet（数据集）。每个RDD都拥有它的所有的依赖信息，而利用这些信息就可以从错误中恢复。
+如果任何分区的 RDD 由于 Worker 节点失败而丢失，那么这个分区能够根据依赖关系从原始数据集中恢复出来。
+假设所有的 RDD 转换">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hadoop源码研究（二）-mapreduce相关源码">
-<meta property="og:url" content="http://yoursite.com/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/index.html">
+<meta property="og:title" content="SparkStreaming-容错处理">
+<meta property="og:url" content="http://yoursite.com/2017/06/13/SparkStreaming-容错处理/index.html">
 <meta property="og:site_name" content="The man like the wind">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;经过一周时间的学习对mapreduce开发最相关的几个流程的源码进行了分析。主要是通过大神的博客的指导来学习，但这期间还是有些吃力。hadoop这样一个庞大的工程，要是没有博客指导，都不知道从何下手。参考的博客主要是对旧版本mapreduce进行分析，我同时对新版本的源码也相应的进行了学习，新旧版本改动差距还是很大，项目结构和源码都有不小的改变。不管怎样收获还是很大，不仅对">
-<meta property="og:updated_time" content="2017-03-21T02:45:05.779Z">
+<meta property="og:description" content="背景为了理解 Spark Streaming 提供的语义，让我们记住 Spark RDDs 最基本的容错语义。
+
+RDD 是不可变的，确定性的可重新计算的分布式的 DataSet（数据集）。每个RDD都拥有它的所有的依赖信息，而利用这些信息就可以从错误中恢复。
+如果任何分区的 RDD 由于 Worker 节点失败而丢失，那么这个分区能够根据依赖关系从原始数据集中恢复出来。
+假设所有的 RDD 转换">
+<meta property="og:updated_time" content="2017-06-13T06:18:37.012Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hadoop源码研究（二）-mapreduce相关源码">
-<meta name="twitter:description" content="&amp;emsp;&amp;emsp;经过一周时间的学习对mapreduce开发最相关的几个流程的源码进行了分析。主要是通过大神的博客的指导来学习，但这期间还是有些吃力。hadoop这样一个庞大的工程，要是没有博客指导，都不知道从何下手。参考的博客主要是对旧版本mapreduce进行分析，我同时对新版本的源码也相应的进行了学习，新旧版本改动差距还是很大，项目结构和源码都有不小的改变。不管怎样收获还是很大，不仅对">
+<meta name="twitter:title" content="SparkStreaming-容错处理">
+<meta name="twitter:description" content="背景为了理解 Spark Streaming 提供的语义，让我们记住 Spark RDDs 最基本的容错语义。
+
+RDD 是不可变的，确定性的可重新计算的分布式的 DataSet（数据集）。每个RDD都拥有它的所有的依赖信息，而利用这些信息就可以从错误中恢复。
+如果任何分区的 RDD 由于 Worker 节点失败而丢失，那么这个分区能够根据依赖关系从原始数据集中恢复出来。
+假设所有的 RDD 转换">
 
 
 
@@ -124,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/13/SparkStreaming-容错处理/"/>
 
 
 
 
 
-  <title> hadoop源码研究（二）-mapreduce相关源码 | The man like the wind </title>
+  <title> SparkStreaming-容错处理 | The man like the wind </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -259,7 +271,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/13/SparkStreaming-容错处理/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="无尴尬不青春">
@@ -283,7 +295,7 @@
             
             
               
-                hadoop源码研究（二）-mapreduce相关源码
+                SparkStreaming-容错处理
               
             
           </h1>
@@ -298,8 +310,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-21T10:40:31+08:00">
-                2017-03-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-13T14:14:41+08:00">
+                2017-06-13
               </time>
             
 
@@ -321,8 +333,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">hadoop</span>
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
                   </a>
                 </span>
 
@@ -339,8 +351,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/21/hadoop源码研究（二）-mapreduce相关源码/" itemprop="commentCount"></span>
+                <a href="/2017/06/13/SparkStreaming-容错处理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/13/SparkStreaming-容错处理/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -366,14 +378,75 @@
       
 
       
-        <p>&emsp;&emsp;经过一周时间的学习对mapreduce开发最相关的几个流程的源码进行了分析。主要是通过大神的博客的指导来学习，但这期间还是有些吃力。hadoop这样一个庞大的工程，要是没有博客指导，都不知道从何下手。参考的博客主要是对旧版本mapreduce进行分析，我同时对新版本的源码也相应的进行了学习，新旧版本改动差距还是很大，项目结构和源码都有不小的改变。不管怎样收获还是很大，不仅对mapreduce有了更深入理解同时对java也起到了查漏补缺的作用。接下来还会继续对hadoop的common包进行学习。下面列出我参考的博客地址：<br><a id="more"></a><br>我是下载的hadoop2.7.3的项目源码，mapreduce相关的包的源码路径为：hadoop-2.7.3-src\hadoop-mapreduce-project\hadoop-mapreduce-client\hadoop-mapreduce-client-core</p>
-<ol>
-<li><a href="http://blog.csdn.net/androidlushangderen/article/details/41114259" target="_blank" rel="external">MapReduce的InputFormat过程的学习</a>  </li>
-<li><a href="http://blog.csdn.net/androidlushangderen/article/details/41142795" target="_blank" rel="external">Map Task内部实现分析</a>  </li>
-<li><a href="http://blog.csdn.net/androidlushangderen/article/details/41172865" target="_blank" rel="external">Partitioner分区过程分析</a>  </li>
-<li><a href="http://blog.csdn.net/androidlushangderen/article/details/41243505" target="_blank" rel="external"> Reduce Task的学习笔记</a>  </li>
-<li><a href="http://blog.csdn.net/androidlushangderen/article/details/41278351" target="_blank" rel="external">OutputFormat输出过程的学习</a>  </li>
-</ol>
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>为了理解 Spark Streaming 提供的语义，让我们记住 Spark RDDs 最基本的容错语义。</p>
+<ul>
+<li>RDD 是不可变的，确定性的可重新计算的分布式的 DataSet（数据集）。每个RDD都拥有它的所有的依赖信息，而利用这些信息就可以从错误中恢复。</li>
+<li>如果任何分区的 RDD 由于 Worker 节点失败而丢失，那么这个分区能够根据依赖关系从原始数据集中恢复出来。</li>
+<li>假设所有的 RDD 转换是确定的，在最终转换的 RDD 中的数据总是相同的，与Spark 群集中的失败无关。<a id="more"></a>
+Spark 在数据上的操作像  HDFS 或者 S3 这样容错的文件系统一样。因此，所有从容错的数据中产生的 RDDs 也是容错的。然而，这种情况在 Spark Streaming 中不适用，因为在大多数情况下数据通过网络被接收（除非使用 fileStream）。为了对所有产生的 RDDs 实现相同的容错语义属性，接收的数据被复制到群集中 Worker 节点的多个 Spark Executor 之间（默认复制因子是 2）。这将会造成需要在发生故障时去恢复两种类型的数据:</li>
+<li>Data received and replicated（数据接收并且被复制）- 这个数据在单个工作节点的故障中幸存下来，因为它的副本存在于其他节点之一上。</li>
+<li>Data received but buffered for replication（数据接收但是缓冲了副本）- 因为这份数据没有被复制，唯一恢复这份数据的方式是从 Source（源/数据源）再次获取它。</li>
+</ul>
+<p>此外，我们应该关注两种类型的故障 :</p>
+<ul>
+<li>Failure of a Worker Node（Worker 节点的故障）- 任何运行 Executor 的 Worker 节点都是可以故障，并且这些节点所有在 Memory（内存）中的数据将会丢失。如果任何 Receiver（接收器）运行在故障的节点，那么他们缓存的数据将丢失。</li>
+<li>Failure of the Driver Node（Driver 节点的故障）- 如果 Driver 节点运行的 Spark Streaming 应用程序发生故障，那么很显然 SparkContext 将会丢失，所有 Executor 与它们在内存中的数据都会丢失</li>
+</ul>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>streaming系统的语义通常是通过系统可以处理每个记录的次数来捕获的。 系统可以在所有可能的操作条件下提供三种类型的保证（即使有故障，等等）：</p>
+<ul>
+<li>最多一次 : 每个记录将被处理一次或者根本不处理。</li>
+<li>至少一次 : 每个记录将被处理一次或多次。这比最多一次要健壮，因为它确保数据不会丢失。但有可能重复处理。</li>
+<li>只有一次 : 每个记录将被处理一次，确保这一次数据完整。这显然是三者的最强保障。</li>
+</ul>
+<h1 id="基本语义"><a href="#基本语义" class="headerlink" title="基本语义"></a>基本语义</h1><p>在任何流处理系统，从广义上讲，处理数据有三个步骤。</p>
+<ul>
+<li>接收数据 : 使用Receivers或其他方式从数据源接收数据。</li>
+<li>转换数据 : 所接收的数据使用 DStream 和 RDD 变换转化</li>
+<li>输出数据 : 最后变换的数据被推送到外部系统，如文件系统，数据库，仪表盘等</li>
+</ul>
+<p>如果流式应用程序必须实现端到端的一次性保证，那么每个步骤都必须提供一次性的保证。 也就是说，每个记录必须被正确地接收一次，正确的转换一次，并被正确的推送到下游系统一次。 让我们在Spark Streaming的上下文中了解这些步骤的语义。</p>
+<ul>
+<li>接收数据 : 不同的输入源提供不同的容错。详细过程在下一小节中讨论。</li>
+<li>转换数据 ：由于RDD提供的保证，所有已收到的数据将被处理一次。 即使存在故障，只要接收到的输入数据可访问，最终变换的RDD将始终具有相同的内容。</li>
+<li>输出操作默认情况下确保至少保留一次语义，因为它取决于输出操作的类型（幂等于或不）和下游系统的语义（支持事务或者不支持）。 但是用户可以实现自己的事务机制来实现exactly-once语义。 这将在本节后面的更多细节中讨论。</li>
+</ul>
+<h1 id="接收数据的语义"><a href="#接收数据的语义" class="headerlink" title="接收数据的语义"></a>接收数据的语义</h1><p>不同的输入源提供不同的保障，从至少一次到正好一次。阅读更多的细节。</p>
+<h1 id="关于文件"><a href="#关于文件" class="headerlink" title="关于文件"></a>关于文件</h1><p>如果所有输入数据已经存在于像HDFS这样的容错文件系统中，Spark Streaming总是可以从任何故障中恢复并处理所有数据。 这给出了exactly-once的语义，这意味着无论什么失败，所有的数据将被精确地处理一次。</p>
+<h1 id="基于-Receiver（接收器）-的-Source（源）"><a href="#基于-Receiver（接收器）-的-Source（源）" class="headerlink" title="基于 Receiver（接收器） 的 Source（源）"></a>基于 Receiver（接收器） 的 Source（源）</h1><p>对于基于 receiver 的输入源，容错的语义既依赖于故障的情形也依赖于 receiver 的类型。正如之前讨论的，有两种类型的 receiver :</p>
+<ul>
+<li>Reliable Receiver（可靠的接收器）: 这些 receivers 只有在确保数据复制之后才会告知可靠源。如果这样一个 receiver 失败了，缓冲（非复制）数据不会被源所承认。如果 receiver 重启，源会重发数 据，因此不会丢失数据。</li>
+<li>Unreliable Receiver（不可靠的接收器）: 这种receiver不发送确认信息，因此当 worker 或者 driver 节点故障，这种 receiver 会丢失数据。</li>
+</ul>
+<p>根据使用的reveivers类型，我们实现以下语义。 如果工作节点出现故障，使用可靠的接收器则没有数据丢失。 使用不可靠的接收器，收到但未复制的数据可能会丢失。 如果驱动程序节点出现故障，那么除了这些损失之外，所有在内存中接收和复制的数据都将丢失。 这将影响有状态转换的结果。<br>为了避免丢失过去接收的数据，Spark 1.2 引入了一个实验性的特征（预写日志机制）write ahead logs，它保存接收的数据到容错存储系统中。有了 write ahead logs 和 Reliable Receiver，我们可以做到零数据丢失以及 exactly-once 语义。<br>下表总结了根据故障的语义 :</p>
+<table>
+<thead>
+<tr>
+<th>Deployment Scenario</th>
+<th>Worker Failure</th>
+<th>Driver Failure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spark 1.1 或者更早, 没有 write ahead log 的 Spark 1.2</td>
+<td>在 Unreliable Receiver 情况下缓冲数据丢失；reliable receivers情况下零丢失；支持At-least once 语义</td>
+<td>在 Unreliable Receiver 情况下缓冲数据丢失；所有receivers的过去数据丢失；未定义的语义</td>
+</tr>
+<tr>
+<td>带有 write ahead log 的 Spark 1.2，或者以后版本</td>
+<td>reliable receivers情况下零丢失；支持At-least once 语义</td>
+<td>reliable receivers或者files情况下零丢失；支持At-least once 语义</td>
+</tr>
+</tbody>
+</table>
+<h1 id="Kafka-Direct-API"><a href="#Kafka-Direct-API" class="headerlink" title="Kafka Direct API"></a>Kafka Direct API</h1><p>在Spark 1.3中，我们引入了一个新的Kafka Direct API，可以确保所有的Kafka数据都被Spark Streaming正确接收一次。 与此同时，如果实现exactly-once输出操作，可以实现end-to-end的exactly-once 保证。 kafka集成指南进一步讨论了这一方法。</p>
+<h1 id="输出操作的语义"><a href="#输出操作的语义" class="headerlink" title="输出操作的语义"></a>输出操作的语义</h1><p>输出操作（如foreachRDD）具有至少一次语义，即转换后的数据可能会在worker发生故障时多次写入外部实体。 尽管使用saveAs <em>*</em>文件操作（因为文件将被相同的数据简单地覆盖）保存到文件系统是可以接受的，但是为了实现 exactly-once的语义，可能需要额外的努力。 有两种方法。</p>
+<ul>
+<li>幂等更新 : 多次尝试写相同的数据。例如，saveAs<em>*</em>Files 总是写入相同数据生成的文件</li>
+<li>事务更新：所有更新都是事务性的，以便在原子级完成更新。这样做的一个方法如下：</li>
+</ul>
+<p>使用批处理时间（在foreachRDD中可用）和RDD的分区索引来创建标识符。该标识符唯一地标识流应用中的Blob数据。<br>使用标识符事务地（即，原子地）更新外部系统的这个Blob。 也就是说，如果标识符尚未提交，则以原子方式提交分区数据和标识符。 否则，如果已经提交，请跳过更新。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">dstream.foreachRDD &#123; (rdd, time) =&gt;</div><div class="line">  rdd.foreachPartition &#123; partitionIterator =&gt;</div><div class="line">    <span class="keyword">val</span> partitionId = <span class="type">TaskContext</span>.get.partitionId()</div><div class="line">    <span class="keyword">val</span> uniqueId = generateUniqueId(time.milliseconds, partitionId)</div><div class="line">    <span class="comment">// use this uniqueId to transactionally commit the data in partitionIterator</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -418,7 +491,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+            <a href="/tags/spark学习笔记/" rel="tag"># spark学习笔记</a>
           
         </div>
       
@@ -431,8 +504,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/03/16/java注解详解/" rel="next" title="java注解详解">
-                <i class="fa fa-chevron-left"></i> java注解详解
+              <a href="/2017/06/12/SparkStreaming-性能优化/" rel="next" title="SparkStreaming-性能优化">
+                <i class="fa fa-chevron-left"></i> SparkStreaming-性能优化
               </a>
             
           </div>
@@ -440,10 +513,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/31/java单例模式的可序列化和readResolve/" rel="prev" title="java单例模式的可序列化和readResolve()">
-                java单例模式的可序列化和readResolve() <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -458,10 +527,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/03/21/hadoop源码研究（二）-mapreduce相关源码/"
-     data-title="hadoop源码研究（二）-mapreduce相关源码"
+        <div class="ds-share flat" data-thread-key="2017/06/13/SparkStreaming-容错处理/"
+     data-title="SparkStreaming-容错处理"
      data-content=""
-     data-url="http://yoursite.com/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/">
+     data-url="http://yoursite.com/2017/06/13/SparkStreaming-容错处理/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -488,8 +557,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/03/21/hadoop源码研究（二）-mapreduce相关源码/"
-           data-title="hadoop源码研究（二）-mapreduce相关源码" data-url="http://yoursite.com/2017/03/21/hadoop源码研究（二）-mapreduce相关源码/">
+      <div class="ds-thread" data-thread-key="2017/06/13/SparkStreaming-容错处理/"
+           data-title="SparkStreaming-容错处理" data-url="http://yoursite.com/2017/06/13/SparkStreaming-容错处理/">
       </div>
     
   </div>
@@ -513,8 +582,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/11.png"
@@ -610,6 +688,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定义"><span class="nav-number">2.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本语义"><span class="nav-number">3.</span> <span class="nav-text">基本语义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接收数据的语义"><span class="nav-number">4.</span> <span class="nav-text">接收数据的语义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于文件"><span class="nav-number">5.</span> <span class="nav-text">关于文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于-Receiver（接收器）-的-Source（源）"><span class="nav-number">6.</span> <span class="nav-text">基于 Receiver（接收器） 的 Source（源）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka-Direct-API"><span class="nav-number">7.</span> <span class="nav-text">Kafka Direct API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#输出操作的语义"><span class="nav-number">8.</span> <span class="nav-text">输出操作的语义</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
